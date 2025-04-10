@@ -21,5 +21,12 @@ export default {
         reportedFilePath: 'absolute',
       },
     ],
+    [
+      'jest-junit',
+      {
+        outputDirectory: '<rootDir>/reports',
+        outputName: 'test-report.xml',
+      },
+    ],
   ],
 }

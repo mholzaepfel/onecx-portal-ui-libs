@@ -1,6 +1,6 @@
 {
   "name": "@onecx/onecx-portal-ui-libs",
-  "version": "5.34.1",
+  "version": "5.34.2",
   "license": "Apache-2.0",
   "scripts": {
     "sass": "npx sass libs/portal-integration-angular/assets/styles.scss libs/portal-integration-angular/assets/output.css",
@@ -8,7 +8,7 @@
     "build": "nx run-many -t build",
     "build-copy": "npm run build && node copy-build.js",
     "test": "nx run-many -t test",
-    "create-reports": "node generate-reports.js",
+    "test:ci": "node generate-reports.js",
     "sonar": "node run-sonar-tests.js",
     "generate-sonar-properties": "node generate-sonar-project-properties.js",
     "karma": "node delete-reports.js"
@@ -104,6 +104,7 @@
     "jest-canvas-mock": "^2.5.2",
     "jest-environment-jsdom": "^29.7.0",
     "jest-environment-node": "^29.7.0",
+    "jest-junit": "^16.0.0",
     "jest-preset-angular": "^14.2.2",
     "jest-sonar": "^0.2.16",
     "jest-sonar-reporter": "^2.0.0",

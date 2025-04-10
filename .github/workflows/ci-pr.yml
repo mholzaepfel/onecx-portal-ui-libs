@@ -1,103 +1,47 @@
 name: CI Pull Request
+
 on:
   pull_request:
     branches:
       - main
       - develop
       - v3
-    paths:
-      - 'libs/accelerator/**'
-      - 'libs/angular-accelerator/**'
-      - 'libs/angular-auth/**'
-      - 'libs/angular-integration-interface/**'
-      - 'libs/angular-remote-components/**'
-      - 'libs/angular-utils/**'
-      - 'libs/angular-webcomponents/**'
-      - 'libs/integration-interface/**'
-      - 'libs/keycloak-auth/**'
-      - 'libs/ngrx-accelerator/**'
-      - 'libs/portal-integration-angular/**'
-      - 'libs/shell-core/**'
-      - 'libs/standalone-shell/**'
+
 jobs:
   ci-common:
     uses: ./.github/workflows/ci-common.yml
     secrets: inherit
 
-  sonarQubeScan1:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/accelerator/
+  sonarQubeScan:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        path: ${{ fromJson(needs.set-paths.outputs.paths) }}
+    needs: set-paths
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  sonarQubeScan2:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/angular-accelerator/
+      - name: Print paths variable
+        run: |
+          echo "Paths: ${{ matrix.path }}"
 
-  sonarQubeScan3:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/angular-auth/
+      - name: Run SonarQube Scan
+        uses: ./.github/workflows/ci-sonar.yml
+        with:
+          projectPath: ${{ matrix.path }}
 
-  sonarQubeScan4:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/angular-integration-interface/
+  set-paths:
+    runs-on: ubuntu-latest
+    outputs:
+      paths: ${{ steps.set-paths.outputs.paths }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  sonarQubeScan5:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/angular-remote-components/
-
-  sonarQubeScan6:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/angular-utils/
-
-  sonarQubeScan7:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/angular-webcomponents/
-
-  sonarQubeScan8:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/integration-interface/
-
-  sonarQubeScan9:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/keycloak-auth/
-
-  sonarQubeScan10:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/ngrx-accelerator/
-
-  sonarQubeScan11:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/portal-integration-angular/
-
-  sonarQubeScan12:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/shell-core/
-
-  sonarQubeScan13:
-    uses: ./.github/workflows/ci-sonar.yml
-    secrets: inherit
-    with:
-      projectPath: libs/standalone-shell/
+      - name: Find project paths
+        id: set-paths
+        run: |
+          paths=$(find libs -type d -maxdepth 1 -mindepth 1 -exec basename {} \;)
+          echo "::set-output name=paths::$(echo $paths | jq -R -s -c 'split("\n")[:-1]')"
+          echo "Found paths: $paths"
