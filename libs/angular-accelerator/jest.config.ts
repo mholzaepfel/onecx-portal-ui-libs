@@ -3,7 +3,6 @@ export default {
   displayName: 'angular-accelerator',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/angular-accelerator',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
@@ -23,4 +22,20 @@ export default {
     'jest-preset-angular/build/serializers/html-comment',
   ],
   testEnvironment: '@happy-dom/jest-environment',
+  testMatch: ['<rootDir>/src/**/*.spec.ts'],
+  coverageDirectory: '<rootDir>/reports/coverage/',
+  collectCoverage: true,
+  coverageReporters: ['json', 'lcov', 'text', 'text-summary', 'html'],
+  testResultsProcessor: 'jest-sonar-reporter',
+  reporters: [
+    'default',
+    [
+      'jest-sonar',
+      {
+        outputDirectory: '<rootDir>/reports',
+        outputName: 'sonarqube_report.xml',
+        reportedFilePath: 'absolute',
+      },
+    ],
+  ],
 }

@@ -20,5 +20,8 @@
   "typings": "./src/index.d.ts",
   "publishConfig": {
     "access": "public"
+  },
+  "jestSonar": {
+    "reportPath": "reports"
   }
 }
