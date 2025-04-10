@@ -11,37 +11,6 @@ jobs:
   ci-common:
     uses: ./.github/workflows/ci-common.yml
     secrets: inherit
-
-  sonarQubeScan:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        path: ${{ fromJson(needs.set-paths.outputs.paths) }}
-    needs: set-paths
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Print paths variable
-        run: |
-          echo "Paths: ${{ matrix.path }}"
-
-      - name: Run SonarQube Scan
-        uses: ./.github/workflows/ci-sonar.yml
-        with:
-          projectPath: ${{ matrix.path }}
-
-  set-paths:
-    runs-on: ubuntu-latest
-    outputs:
-      paths: ${{ steps.set-paths.outputs.paths }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Find project paths
-        id: set-paths
-        run: |
-          paths=$(find libs -type d -maxdepth 1 -mindepth 1 -exec basename {} \;)
-          echo "::set-output name=paths::$(echo $paths | jq -R -s -c 'split("\n")[:-1]')"
-          echo "Found paths: $paths"
+  ci-sonar:
+    uses: ./.github/workflows/ci-sonar.yml
+    secrets: inherit

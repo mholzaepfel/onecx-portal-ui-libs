@@ -1,0 +1,66 @@
+name: sonar-runner
+
+on:
+  workflow_call:
+    inputs:
+      node:
+        description: 'Node version'
+        default: '20'
+        required: false
+        type: string
+      artifact:
+        description: 'Name of the artifact for the build'
+        default: 'package'
+        required: false
+        type: string
+      artifactPath:
+        description: 'Artifact path'
+        default: '.'
+        required: false
+        type: string
+      projectPath:
+        description: 'Project path'
+        default: '.'
+        required: false
+        type: string
+
+jobs:
+  sonar:
+    name: sonar qa
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # setup node.js
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node }}
+          cache: 'npm'
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact }}
+          path: ${{ inputs.artifactPath }}
+      - name: Sonar publish analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_URL: 'https://sonarcloud.io'
+        run: |
+          SONAR_KEY="${GITHUB_REPOSITORY//\//_}"   
+          OPS="-Dsonar.projectKey=$SONAR_KEY"
+          OPS="$OPS -Dsonar.host.url=$SONAR_URL"
+          OPS="$OPS -Dsonar.organization=${{ github.repository_owner }}"
+          OPS="$OPS -Dsonar.sourceEncoding=UTF-8"
+          OPS="$OPS -Dsonar.testExecutionReportPaths=./reports/sonarqube_report.xml"
+          OPS="$OPS -Dsonar.javascript.lcov.reportPaths=./reports/coverage/lcov.info"          
+          OPS="$OPS -Dsonar.javascript.maximumFunctionParameters=10"
+          OPS="$OPS -Dsonar.typescript.maximumFunctionParameters=10"
+          OPS="$OPS -Dsonar.cdp.javascript.maximumFunctionParameters=10"
+          OPS="$OPS -Dsonar.cdp.typescript.maximumFunctionParameters=10"
+          OPS="$OPS -Dsonar.javascript.exclusions=src/app/shared/generated/**/*"
+          OPS="$OPS -Dsonar.coverage.exclusions=*.ts,*.js,src/*.ts,src/**/*.module.ts,src/**/*.main.ts,src/**/*.bootstrap.ts,src/environments/*,src/assets/**/*,src/app/shared/generated/**/*"
+          OPS="$OPS -Dsonar.test.inclusions=src/lib/**/*.spec.ts"
+          npx sonarqube-scanner $OPS -Dsonar.token=${{ secrets.SONAR_TOKEN }}

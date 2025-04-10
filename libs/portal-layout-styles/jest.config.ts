@@ -19,7 +19,13 @@ export default {
       {
         outputDirectory: '<rootDir>/reports',
         outputName: 'sonarqube_report.xml',
-        reportedFilePath: 'absolute',
+      },
+    ],
+    [
+      'jest-junit',
+      {
+        outputDirectory: '<rootDir>/reports',
+        outputName: 'portal-layout-styles-test-report.xml',
       },
     ],
   ],
