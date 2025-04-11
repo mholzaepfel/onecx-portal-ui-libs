@@ -1,6 +1,6 @@
-const nxPreset = require('@nx/jest/preset').default;
+const nxPreset = require('@nx/jest/preset').default
 
-module.exports = { 
-    ...nxPreset,
-    snapshotFormat: { escapeString: true, printBasicPrototype: true },
- };
+module.exports = {
+  ...nxPreset,
+  snapshotFormat: { escapeString: true, printBasicPrototype: true },
+}
