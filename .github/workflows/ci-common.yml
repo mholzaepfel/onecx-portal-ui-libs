@@ -7,7 +7,7 @@ jobs:
   codeql:
     uses: onecx/ci-angular/.github/workflows/angular-codeql.yml@v1
     secrets: inherit
-  common-tests:
+  lint-test-build-sonarUpload:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

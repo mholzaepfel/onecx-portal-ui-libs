@@ -1,6 +1,6 @@
 name: CI Push
 
-on: 
+on:
   push:
     branches:
       - '*'
@@ -9,5 +9,8 @@ on:
 
 jobs:
   ci-common:
-    uses: ./.github/workflows/ci-common.yml 
+    uses: ./.github/workflows/ci-common.yml
+    secrets: inherit
+  ci-sonar:
+    uses: ./github/workflows/ci-sonar.yml
     secrets: inherit
