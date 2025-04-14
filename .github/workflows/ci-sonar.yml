@@ -28,6 +28,9 @@ jobs:
           node-version: ${{ inputs.node }}
           cache: 'npm'
 
+      - uses: actions/download-artifact@v4
+        with:
+          path: ${{ inputs.paths }}
       - name: Run SonarQube Analysis
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
