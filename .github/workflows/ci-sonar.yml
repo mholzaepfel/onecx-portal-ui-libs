@@ -1,39 +1,56 @@
-name: sonar
+name: Sonar Runner
 
 on:
   workflow_call:
+    inputs:
+      node:
+        description: 'Node version'
+        default: '20'
+        required: false
+        type: string
+      paths:
+        description: 'Paths to analyze'
+        required: true
+        type: string
 
 jobs:
-  sonarQubeScan:
+  sonar-analysis:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        path: ${{ fromJson(needs.set-paths.outputs.paths) }}
-    needs: set-paths
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Print paths variable
-        run: |
-          echo "Paths: ${{ matrix.path }}"
-
-      - name: Run SonarQube Scan
-        uses: ./.github/workflows/ci-sonar-runner.yml
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          projectPath: ${{ matrix.path }}
+          fetch-depth: 0
 
-  set-paths:
-    runs-on: ubuntu-latest
-    outputs:
-      paths: ${{ steps.set-paths.outputs.paths }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node }}
+          cache: 'npm'
 
-      - name: Find project paths
-        id: set-paths
+      - name: Run SonarQube Analysis
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_URL: 'https://sonarcloud.io'
         run: |
-          paths=$(find libs -type d -maxdepth 1 -mindepth 1 -exec basename {} \;)
-          echo "::set-output name=paths::$(echo $paths | jq -R -s -c 'split("\n")[:-1]')"
-          echo "Found paths: $paths"
+          paths=${{ inputs.paths }}
+          for path in $(echo $paths | jq -r '.[]'); do
+            echo "Running SonarQube analysis for $path"
+            sonar-scanner \
+              -Dsonar.projectKey=$path \
+              -Dsonar.sources=$path \
+              -Dsonar.host.url=$SONAR_URL \
+              -Dsonar.organization=${{ github.repository_owner }} \
+              -Dsonar.sourceEncoding=UTF-8 \
+              -Dsonar.testExecutionReportPaths=./reports/$path/sonarqube_report.xml \
+              -Dsonar.javascript.lcov.reportPaths=./reports/$path/coverage/lcov.info \
+              -Dsonar.javascript.maximumFunctionParameters=10 \
+              -Dsonar.typescript.maximumFunctionParameters=10 \
+              -Dsonar.cdp.javascript.maximumFunctionParameters=10 \
+              -Dsonar.cdp.typescript.maximumFunctionParameters=10 \
+              -Dsonar.javascript.exclusions=src/app/shared/generated/**/* \
+              -Dsonar.coverage.exclusions=*.ts,*.js,src/*.ts,src/**/*.module.ts,src/**/*.main.ts,src/**/*.bootstrap.ts,src/environments/*,src/assets/**/*,src/app/shared/generated/**/* \
+              -Dsonar.test.inclusions=src/lib/**/*.spec.ts \
+              -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+          done

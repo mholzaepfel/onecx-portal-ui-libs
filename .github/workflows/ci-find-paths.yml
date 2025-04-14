@@ -1,0 +1,20 @@
+name: Pathfinder for Sonar
+
+on:
+  workflow_call:
+
+jobs:
+  set-paths:
+    runs-on: ubuntu-latest
+    outputs:
+      paths: ${{ steps.set-paths.outputs.paths }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Find project paths
+        id: set-paths
+        run: |
+          paths=$(find libs -type d -maxdepth 1 -mindepth 1 -exec basename {} \;)
+          echo "::set-output name=paths::$(echo $paths | jq -R -s -c 'split("\n")[:-1]')"
+          echo "Found paths: $paths"

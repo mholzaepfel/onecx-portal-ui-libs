@@ -11,6 +11,12 @@ jobs:
   ci-common:
     uses: ./.github/workflows/ci-common.yml
     secrets: inherit
+  ci-find-paths:
+    uses: ./.github/workflows/ci-find-paths.yml
+    secrets: inherit
   ci-sonar:
+    needs: ci-find-paths
     uses: ./.github/workflows/ci-sonar.yml
     secrets: inherit
+    with:
+      paths: ${{ needs.ci-find-paths.outputs }}
