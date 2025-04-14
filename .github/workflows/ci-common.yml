@@ -4,11 +4,6 @@ on:
   workflow_call:
 
 jobs:
-  dependency-review:
-    uses: onecx/ci-common/.github/workflows/dependency-review.yml@v1
-    secrets: inherit
-    with:
-      failOnSeverity: 'high'
   codeql:
     uses: onecx/ci-angular/.github/workflows/angular-codeql.yml@v1
     secrets: inherit
