@@ -16,5 +16,5 @@ jobs:
         id: set-paths
         run: |
           paths=$(find libs -type d -maxdepth 1 -mindepth 1 -exec basename {} \;)
-          echo "::set-output name=paths::$(echo $paths | jq -R -s -c 'split("\n")[:-1]')"
+          echo "name=paths::$(echo $paths | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
           echo "Found paths: $paths"
