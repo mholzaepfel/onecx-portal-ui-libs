@@ -142,3 +142,11 @@ libs/angular-accelerator/tmp/
 libs/portal-integration-angular/tmp/
 
 .copy-build-to
+
+delete-reports.js
+generate-reports.js
+generate-sonar-project-properties.js
+generate.paths.js
+test_matrix.sh
+run-sonar-tests.js
+**/sonar-project.properties
