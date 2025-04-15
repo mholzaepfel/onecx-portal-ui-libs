@@ -12,6 +12,10 @@ on:
         description: 'Paths to analyze'
         required: true
         type: string
+      branch:
+        description: 'Branch to analyze'
+        required: true
+        type: string
 
 jobs:
   sonar-analysis:
@@ -44,6 +48,7 @@ jobs:
               -Dsonar.projectKey=$path \
               -Dsonar.sources=$path \
               -Dsonar.host.url=$SONAR_URL \
+              -Dsonar.branch.name=${{ inputs.branch }} \
               -Dsonar.organization=${{ github.repository_owner }} \
               -Dsonar.sourceEncoding=UTF-8 \
               -Dsonar.testExecutionReportPaths=./reports/$path/sonarqube_report.xml \
