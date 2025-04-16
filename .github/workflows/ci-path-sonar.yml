@@ -36,6 +36,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_URL: 'https://sonarcloud.io'
+          paths: ${{ needs.find-paths.outputs.paths }}
         run: |
           for path in $(echo ${{ env.paths }} | jq -r '.[]'); do
             echo "Running SonarQube analysis for $path"
