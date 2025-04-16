@@ -25,4 +25,3 @@ jobs:
     secrets: inherit
     with:
       paths: ${{ needs.ci-find-paths.outputs.paths }}
-      branch: 'ci/new-workflow-setup'
