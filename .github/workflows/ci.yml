@@ -17,10 +17,14 @@ jobs:
     uses: ./.github/workflows/ci-common.yml
     secrets: inherit
 
-  ci-path-sonar:
+  ci-mono-sonar:
     needs: ci-common
-    uses: ./.github/workflows/ci-path-sonar.yml
+    uses: ./.github/workflows/ci-mono-sonar.yml
     secrets: inherit
+  #ci-path-sonar:
+  #needs: ci-common
+  #uses: ./.github/workflows/ci-path-sonar.yml
+  #secrets: inherit
   #ci-find-paths:
   #needs: ci-common
   #uses: ./.github/workflows/ci-find-paths.yml

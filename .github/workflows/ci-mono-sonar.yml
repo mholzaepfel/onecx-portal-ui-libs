@@ -1,0 +1,63 @@
+name: My Test Monorepo Project
+on:
+  workflow_call:
+
+jobs:
+  sonarqubeScan1:
+    name: SonarQubeScan1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: libs/accelerator/
+          args: >
+            -Dsonar.projectKey=$path \
+            -Dsonar.sources=$path \
+            -Dsonar.host.url=$SONAR_URL \
+            -Dsonar.organization=${{ github.repository_owner }} \
+            -Dsonar.sourceEncoding=UTF-8 \
+            -Dsonar.testExecutionReportPaths=./reports/$path/sonarqube_report.xml \
+            -Dsonar.javascript.lcov.reportPaths=./reports/$path/coverage/lcov.info \
+            -Dsonar.javascript.maximumFunctionParameters=10 \
+            -Dsonar.typescript.maximumFunctionParameters=10 \
+            -Dsonar.cdp.javascript.maximumFunctionParameters=10 \
+            -Dsonar.cdp.typescript.maximumFunctionParameters=10 \
+            -Dsonar.javascript.exclusions=src/app/shared/generated/**/* \
+            -Dsonar.coverage.exclusions=*.ts,*.js,src/*.ts,src/**/*.module.ts,src/**/*.main.ts,src/**/*.bootstrap.ts,src/environments/*,src/assets/**/*,src/app/shared/generated/**/* \
+            -Dsonar.test.inclusions=src/lib/**/*.spec.ts \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+  sonarqubeScan2:
+    name: SonarQubeScan2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: libs/angular-accelerator/
+          args: >
+            -Dsonar.projectKey=$path \
+            -Dsonar.sources=$path \
+            -Dsonar.host.url=$SONAR_URL \
+            -Dsonar.organization=${{ github.repository_owner }} \
+            -Dsonar.sourceEncoding=UTF-8 \
+            -Dsonar.testExecutionReportPaths=./reports/$path/sonarqube_report.xml \
+            -Dsonar.javascript.lcov.reportPaths=./reports/$path/coverage/lcov.info \
+            -Dsonar.javascript.maximumFunctionParameters=10 \
+            -Dsonar.typescript.maximumFunctionParameters=10 \
+            -Dsonar.cdp.javascript.maximumFunctionParameters=10 \
+            -Dsonar.cdp.typescript.maximumFunctionParameters=10 \
+            -Dsonar.javascript.exclusions=src/app/shared/generated/**/* \
+            -Dsonar.coverage.exclusions=*.ts,*.js,src/*.ts,src/**/*.module.ts,src/**/*.main.ts,src/**/*.bootstrap.ts,src/environments/*,src/assets/**/*,src/app/shared/generated/**/* \
+            -Dsonar.test.inclusions=src/lib/**/*.spec.ts \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
