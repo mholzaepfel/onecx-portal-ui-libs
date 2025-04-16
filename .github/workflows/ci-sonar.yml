@@ -30,7 +30,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          path: ${{ inputs.paths }}
+          paths: ${{ inputs.paths }}
       - name: Run SonarQube Analysis
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}

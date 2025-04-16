@@ -7,7 +7,6 @@ on:
       - '*'
       - '*/*'
       - '**'
-      - ci/*
 
 jobs:
   ci-common:
