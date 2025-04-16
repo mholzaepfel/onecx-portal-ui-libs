@@ -9,6 +9,10 @@ on:
       - '**'
 
 jobs:
+  codeql:
+    uses: onecx/ci-angular/.github/workflows/angular-codeql.yml@v1
+    secrets: inherit
+
   ci-common:
     uses: ./.github/workflows/ci-common.yml
     secrets: inherit

@@ -23,7 +23,7 @@ export default {
   ],
   testEnvironment: '@happy-dom/jest-environment',
   testMatch: ['<rootDir>/src/**/*.spec.ts'],
-  coverageDirectory: '<rootDir>/reports/coverage/',
+  coverageDirectory: '../../coverage/libs/angular-accelerator',
   collectCoverage: true,
   coverageReporters: ['json', 'lcov', 'text', 'text-summary', 'html'],
   testResultsProcessor: 'jest-sonar-reporter',
@@ -32,15 +32,17 @@ export default {
     [
       'jest-sonar',
       {
-        outputDirectory: '<rootDir>/reports',
+        outputDirectory: 'reports/angular-accelerator',
         outputName: 'sonarqube_report.xml',
+        reportedFilePath: 'absolute',
       },
     ],
     [
       'jest-junit',
       {
-        outputDirectory: '<rootDir>/reports',
-        outputName: 'angular-accelerator-test-report.xml',
+        outputDirectory: 'reports/angular-accelerator',
+        outputName: 'test-report.xml',
+        reportedFilePath: 'absolute',
       },
     ],
   ],

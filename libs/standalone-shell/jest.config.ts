@@ -18,7 +18,7 @@ export default {
     'jest-preset-angular/build/serializers/html-comment',
   ],
   testMatch: ['<rootDir>/src/lib/**/*.spec.ts'],
-  coverageDirectory: '<rootDir>/reports/coverage/',
+  coverageDirectory: '../../coverage/libs/standalone-shell',
   collectCoverage: true,
   coverageReporters: ['json', 'lcov', 'text', 'text-summary', 'html'],
   testResultsProcessor: 'jest-sonar-reporter',
@@ -27,15 +27,17 @@ export default {
     [
       'jest-sonar',
       {
-        outputDirectory: '<rootDir>/reports',
+        outputDirectory: 'reports/standalone-shell',
         outputName: 'sonarqube_report.xml',
+        reportedFilePath: 'absolute',
       },
     ],
     [
       'jest-junit',
       {
-        outputDirectory: '<rootDir>/reports',
-        outputName: 'standalone-shell-test-report.xml',
+        outputDirectory: 'reports/standalone-shell',
+        outputName: 'test-report.xml',
+        reportedFilePath: 'absolute',
       },
     ],
   ],

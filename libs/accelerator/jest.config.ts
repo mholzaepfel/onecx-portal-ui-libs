@@ -8,7 +8,7 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   testMatch: ['<rootDir>/src/lib/**/*.spec.ts'],
-  coverageDirectory: '<rootDir>/reports/coverage/',
+  coverageDirectory: '../../coverage/libs/accelerator',
   collectCoverage: true,
   coverageReporters: ['json', 'lcov', 'text', 'text-summary', 'html'],
   testResultsProcessor: 'jest-sonar-reporter',
@@ -17,15 +17,17 @@ export default {
     [
       'jest-sonar',
       {
-        outputDirectory: '<rootDir>/reports',
+        outputDirectory: 'reports/accelerator',
         outputName: 'sonarqube_report.xml',
+        reportedFilePath: 'absolute',
       },
     ],
     [
       'jest-junit',
       {
-        outputDirectory: '<rootDir>/reports',
-        outputName: 'accelerator-test-report.xml',
+        outputDirectory: 'reports/accelerator',
+        outputName: 'test-report.xml',
+        reportedFilePath: 'absolute',
       },
     ],
   ],
