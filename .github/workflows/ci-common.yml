@@ -35,7 +35,6 @@ jobs:
           name: package
           path: |
             package.json      
-            dist/
-            reports/
+            dist/*
           retention-days: 1
           if-no-files-found: ignore
