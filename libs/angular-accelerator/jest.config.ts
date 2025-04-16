@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'angular-accelerator',
+  displayName: '@onecx/angular-accelerator',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   transform: {
@@ -23,7 +23,7 @@ export default {
   ],
   testEnvironment: '@happy-dom/jest-environment',
   testMatch: ['<rootDir>/src/**/*.spec.ts'],
-  coverageDirectory: '../../coverage/libs/angular-accelerator',
+  coverageDirectory: '../../reports/angular-accelerator/coverage/angular-accelerator',
   collectCoverage: true,
   coverageReporters: ['json', 'lcov', 'text', 'text-summary', 'html'],
   testResultsProcessor: 'jest-sonar-reporter',

@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'accelerator',
+  displayName: '@onecx/accelerator',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
@@ -8,7 +8,7 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   testMatch: ['<rootDir>/src/lib/**/*.spec.ts'],
-  coverageDirectory: '../../coverage/libs/accelerator',
+  coverageDirectory: '../../reports/accelerator/coverage/accelerator',
   collectCoverage: true,
   coverageReporters: ['json', 'lcov', 'text', 'text-summary', 'html'],
   testResultsProcessor: 'jest-sonar-reporter',
