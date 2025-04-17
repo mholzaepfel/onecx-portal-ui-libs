@@ -54,7 +54,6 @@ jobs:
             -Dsonar.cdp.typescript.maximumFunctionParameters=10"
             -Dsonar.coverage.exclusions=*.ts,*.js,src/*.ts,src/**/*.module.ts,src/**/*.main.ts,src/**/*.bootstrap.ts,src/environments/*,src/assets/**/*,src/app/shared/generated/**/*"
             -Dsonar.test.inclusions=src/lib/**/*.spec.ts"
-            npx sonarqube-scanner $OPS -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
   sonarqubeScan2:
     needs: download-artefact
