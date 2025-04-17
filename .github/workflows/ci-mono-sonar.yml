@@ -24,6 +24,9 @@ jobs:
           node-version: ${{ inputs.node }}
           cache: 'npm'
       - uses: actions/download-artifact@v4
+        with:
+          name: accelerator-reports
+          path: reports/accelerator
 
   sonarqubeScan1:
     needs: download-artefact
