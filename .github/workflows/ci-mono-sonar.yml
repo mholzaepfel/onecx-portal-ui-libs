@@ -8,6 +8,16 @@ on:
         default: '20'
         required: false
         type: string
+      artifact:
+        description: 'Name of the artifact for the build'
+        default: 'package'
+        required: false
+        type: string
+      artifactPath:
+        description: 'Artifact path'
+        default: '.'
+        required: false
+        type: string
 
 jobs:
   download-artefact:
@@ -25,8 +35,8 @@ jobs:
           cache: 'npm'
       - uses: actions/download-artifact@v4
         with:
-          name: accelerator-reports
-          path: reports/accelerator
+          name: ${{ inputs.artifact }}
+          path: ${{ inputs.artifactPath }}
 
   sonarqubeScan1:
     needs: download-artefact
