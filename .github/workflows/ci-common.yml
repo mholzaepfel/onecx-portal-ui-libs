@@ -21,13 +21,13 @@ jobs:
         run: npm ci
 
       - name: Lint affected
-        run: npx nx accelerator:lint
+        run: npx nx lint accelerator
 
       - name: Build affected
-        run: npx nx accelerator:build
+        run: npx nx build accelerator
 
       - name: Test affected
-        run: npx nx accelerator:test --configuration=ci
+        run: npx nx test accelerator --configuration=ci
 
       - name: Upload Sonar artefacts
         uses: actions/upload-artifact@v4
