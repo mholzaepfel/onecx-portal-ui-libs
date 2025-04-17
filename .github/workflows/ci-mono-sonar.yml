@@ -2,8 +2,29 @@ name: My Test Monorepo Project
 
 on:
   workflow_call:
+    inputs:
+      node:
+        description: 'Node version'
+        default: '20'
+        required: false
+        type: string
 
 jobs:
+  download-artefact:
+    name: setup-sonar-and-node
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # setup node.js
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node }}
+          cache: 'npm'
+      - uses: actions/download-artifact@v4
+
   sonarqubeScan1:
     name: SonarQubeScan1
     runs-on: ubuntu-latest
