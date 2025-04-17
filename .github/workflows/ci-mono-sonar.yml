@@ -42,7 +42,7 @@ jobs:
         with:
           projectBaseDir: reports/accelerator/
           args: >
-            OPS="-Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs"
+            OPS="$OPS -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs"
             OPS="$OPS -Dsonar.host.url=$SONAR_URL"
             OPS="$OPS -Dsonar.organization=${{ github.repository_owner }}"
             OPS="$OPS -Dsonar.sourceEncoding=UTF-8"
