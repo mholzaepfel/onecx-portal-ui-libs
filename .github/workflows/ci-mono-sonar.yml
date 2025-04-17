@@ -33,7 +33,8 @@ jobs:
         with:
           node-version: ${{ inputs.node }}
           cache: 'npm'
-      - uses: actions/download-artifact@v4
+      - name: download-artefact
+        uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact }}
           path: ${{ inputs.artifactPath }}
@@ -55,10 +56,10 @@ jobs:
         with:
           projectBaseDir: reports/accelerator/
           args: >
-            -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs
-            -Dsonar.host.url=$SONAR_URL
-            -Dsonar.organization=${{ github.repository_owner }}
-            -Dsonar.sourceEncoding=UTF-8
-            -Dsonar.testExecutionReportPaths=./reports/accelerator/sonarqube_report.xml
-            -Dsonar.javascript.lcov.reportPaths=./reports/accelerator/coverage/lcov.info          
-            -Dsonar.test.inclusions=src/lib/**/*.spec.ts
+            -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs \
+            -Dsonar.host.url=$SONAR_URL \
+            -Dsonar.organization=${{ github.repository_owner }} \
+            -Dsonar.sourceEncoding=UTF-8 \
+            -Dsonar.testExecutionReportPaths=./reports/accelerator/sonarqube_report.xml \
+            -Dsonar.javascript.lcov.reportPaths=./reports/accelerator/coverage/lcov.info           \
+            -Dsonar.test.inclusions=src/lib/**/*.spec.ts \
