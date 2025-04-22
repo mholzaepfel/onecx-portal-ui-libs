@@ -48,11 +48,12 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_URL: 'https://sonarcloud.io'
         with:
+          projectBaseDir: reports/accelerator/
           args: >
             -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs
             -Dsonar.host.url=$SONAR_URL
             -Dsonar.organization=${{ github.repository_owner }}
             -Dsonar.sourceEncoding=UTF-8
-            -Dsonar.testExecutionReportPaths=./reports/accelerator/sonarqube_report.xml
-            -Dsonar.javascript.lcov.reportPaths=./reports/accelerator/coverage/lcov.info          
+            -Dsonar.testExecutionReportPaths=./sonarqube_report.xml
+            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info          
             -Dsonar.test.inclusions=src/lib/**/*.spec.ts
