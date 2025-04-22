@@ -24,9 +24,11 @@ jobs:
     name: setup-sonar-and-node
     runs-on: ubuntu-latest
     steps:
+      - run: pwd && ls -lsah
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - run: pwd && ls -lsah
       # setup node.js
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -37,6 +39,7 @@ jobs:
         with:
           name: ${{ inputs.artifact }}
           path: ${{ inputs.artifactPath }}
+      - run: pwd && ls -lsah
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
