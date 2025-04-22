@@ -48,7 +48,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_URL: 'https://sonarcloud.io'
         with:
-          projectBaseDir: reports/accelerator/
           args: >
             -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs
             -Dsonar.host.url=$SONAR_URL
