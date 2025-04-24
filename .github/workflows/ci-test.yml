@@ -1,0 +1,37 @@
+name: ci-test
+
+on:
+  workflow_call:
+
+jobs:
+  ci-test-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - uses: nrwl/nx-set-shas@v3
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Test affected
+        run: |
+          npx nx run-many -t test -p accelerator angular-utils portal-integration-angular --watch=false --browsers=ChromeHeadless --coverage
+
+      - name: Upload Sonar artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: |
+            package.json      
+            libs/accelerator/reports/
+            libs/angular-utils/reports/
+            libs/portal-integration-angular/reports/
+          retention-days: 1
+          if-no-files-found: ignore

@@ -13,21 +13,29 @@ jobs:
     uses: onecx/ci-angular/.github/workflows/angular-codeql.yml@v1
     secrets: inherit
 
-  ci-common:
-    uses: ./.github/workflows/ci-common.yml
+  ci-lint:
+    uses: ./.github/workflows/ci-lint.yml
+    secrets: inherit
+
+  ci-build:
+    uses: ./.github/workflows/ci-build.yml
+    secrets: inherit
+
+  ci-test:
+    uses: ./.github/workflows/ci-test.yml
     secrets: inherit
 
   ci-mono-sonar1:
-    needs: ci-common
+    needs: ci-test
     uses: ./.github/workflows/ci-mono-sonar1.yml
     secrets: inherit
 
   ci-mono-sonar2:
-    needs: ci-common
+    needs: ci-test
     uses: ./.github/workflows/ci-mono-sonar2.yml
     secrets: inherit
 
   ci-mono-sonar3:
-    needs: ci-common
+    needs: ci-test
     uses: ./.github/workflows/ci-mono-sonar3.yml
     secrets: inherit
