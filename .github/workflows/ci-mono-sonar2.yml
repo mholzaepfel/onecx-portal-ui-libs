@@ -53,8 +53,10 @@ jobs:
             -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs_angular-utils
             -Dsonar.host.url=$SONAR_URL
             -Dsonar.organization=${{ github.repository_owner }}
+            -Dsonar.scm.disabled=true
             -Dsonar.sourceEncoding=UTF-8
             -Dsonar.sources=src
+            -Dsonar.javascript.coveragePlugin=lcov
             -Dsonar.javascript.lcov.reportPaths=reports/coverage/lcov.info          
             -Dsonar.testExecutionReportPaths=reports/test-report.xml
             -Dsonar.working.directory=reports/.scannerwork
