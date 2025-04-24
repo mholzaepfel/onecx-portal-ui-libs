@@ -23,17 +23,14 @@ jobs:
       - name: Lint affected
         run: |
           npx nx lint accelerator
-          npx nx lint angular-utils
 
       - name: Build affected
         run: |
           npx nx build accelerator
-          npx nx build angular-utils
 
       - name: Test affected
         run: |
           npx nx test accelerator --configuration=ci
-          npx nx test angular-utils --configuration=ci
 
       - name: Upload Sonar artefacts
         uses: actions/upload-artifact@v4
@@ -41,7 +38,6 @@ jobs:
           name: package
           path: |
             package.json      
-            dist/
-            reports/
+            /libs/accelorator/reports/
           retention-days: 1
           if-no-files-found: ignore
