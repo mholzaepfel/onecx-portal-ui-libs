@@ -35,11 +35,13 @@ jobs:
         with:
           node-version: ${{ inputs.node }}
           cache: 'npm'
+      - run: tree libs/accelerator/
       - uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact }}
           path: ${{ inputs.artifactPath }}
       - run: pwd && ls -lsah
+      - run: tree libs/accelerator/
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
