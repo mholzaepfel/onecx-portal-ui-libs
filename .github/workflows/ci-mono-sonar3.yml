@@ -48,7 +48,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_PIA }}
           SONAR_URL: 'https://sonarcloud.io'
         with:
-          projectBaseDir: reports/portal-integration-angular/
+          projectBaseDir: libs/portal-integration-angular/
           args: >
             -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs_portal-integration-angular
             -Dsonar.host.url=$SONAR_URL
