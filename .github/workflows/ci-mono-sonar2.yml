@@ -50,10 +50,10 @@ jobs:
         with:
           projectBaseDir: libs/angular-utils/
           args: >
-            -sonar.projectKey=mholzaepfel_onecx-portal-ui-libs_angular-utils
-            -sonar.host.url=$SONAR_URL
-            -sonar.organization=${{ github.repository_owner }}
-            -sonar.sourceEncoding=UTF-8
-            -sonar.javascript.lcov.reportPaths=./reports/coverage/lcov.info          
-            -sonar.testExecutionReportPaths=./reports/test-report.xml
-            -sonar.test.inclusions=src/lib/**/*.spec.ts
+            -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs_angular-utils
+            -Dsonar.host.url=$SONAR_URL
+            -Dsonar.organization=${{ github.repository_owner }}
+            -Dsonar.sourceEncoding=UTF-8
+            -Dsonar.javascript.lcov.reportPaths=./reports/coverage/lcov.info          
+            -Dsonar.testExecutionReportPaths=./reports/test-report.xml
+            -Dsonar.test.inclusions=src/lib/**/*.spec.ts
