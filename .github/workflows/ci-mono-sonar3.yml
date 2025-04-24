@@ -40,7 +40,7 @@ jobs:
           name: ${{ inputs.artifact }}
           path: ${{ inputs.artifactPath }}
       - run: pwd && ls -lsah
-      - run: tree reports
+      - run: tree libs/portal-integration-angular
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
@@ -48,7 +48,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_PIA }}
           SONAR_URL: 'https://sonarcloud.io'
         with:
-          projectBaseDir: reports/angular-utils/
+          projectBaseDir: reports/portal-integration-angular/
           args: >
             -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs_portal-integration-angular
             -Dsonar.host.url=$SONAR_URL
