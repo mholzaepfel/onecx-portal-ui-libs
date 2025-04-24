@@ -21,3 +21,13 @@ jobs:
     needs: ci-common
     uses: ./.github/workflows/ci-mono-sonar1.yml
     secrets: inherit
+
+  ci-mono-sonar2:
+    needs: ci-common
+    uses: ./.github/workflows/ci-mono-sonar2.yml
+    secrets: inherit
+
+  ci-mono-sonar3:
+    needs: ci-common
+    uses: ./.github/workflows/ci-mono-sonar3.yml
+    secrets: inherit

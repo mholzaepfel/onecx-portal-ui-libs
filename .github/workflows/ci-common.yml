@@ -22,15 +22,15 @@ jobs:
 
       - name: Lint affected
         run: |
-          npx nx lint accelerator
+          nx run-many -t lint -p accelerator angular-utils portal-integration-angular
 
       - name: Build affected
         run: |
-          npx nx build accelerator
+          nx run-many -t build -p accelerator angular-utils portal-integration-angular
 
       - name: Test affected
         run: |
-          npx nx test accelerator --configuration=ci
+          nx run-many -t test -p accelerator angular-utils portal-integration-angular --watch=false --browsers=ChromeHeadless --coverage
 
       - run: pwd && ls -lsah
 
@@ -41,5 +41,7 @@ jobs:
           path: |
             package.json      
             libs/accelerator/reports/
+            libs/angular-utils/reports/
+            libs/portal-integration-angular/reports/
           retention-days: 1
           if-no-files-found: ignore

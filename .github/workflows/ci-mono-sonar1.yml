@@ -46,7 +46,7 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_ACC }}
           SONAR_URL: 'https://sonarcloud.io'
         with:
           projectBaseDir: libs/accelerator/

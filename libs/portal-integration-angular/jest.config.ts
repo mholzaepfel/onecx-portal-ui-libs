@@ -22,7 +22,7 @@ export default {
     'jest-preset-angular/build/serializers/html-comment',
   ],
   testMatch: ['<rootDir>/src/lib/**/*.spec.ts'],
-  coverageDirectory: '../../coverage/libs/portal-integration-angular',
+  coverageDirectory: './reports/coverage',
   collectCoverage: true,
   coverageReporters: ['json', 'lcov', 'text', 'text-summary', 'html'],
   testResultsProcessor: 'jest-sonar-reporter',
@@ -31,16 +31,8 @@ export default {
     [
       'jest-sonar',
       {
-        outputDirectory: 'reports/portal-integration-angular',
+        outputDirectory: '<rootDir>/reports/',
         outputName: 'sonarqube_report.xml',
-        reportedFilePath: 'absolute',
-      },
-    ],
-    [
-      'jest-junit',
-      {
-        outputDirectory: 'reports/portal-integration-angular',
-        outputName: 'test-report.xml',
         reportedFilePath: 'absolute',
       },
     ],

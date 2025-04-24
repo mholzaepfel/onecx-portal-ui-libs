@@ -45,12 +45,12 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_AU }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_PIA }}
           SONAR_URL: 'https://sonarcloud.io'
         with:
           projectBaseDir: reports/angular-utils/
           args: >
-            -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs
+            -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs_portal-integration-angular
             -Dsonar.host.url=$SONAR_URL
             -Dsonar.organization=${{ github.repository_owner }}
             -Dsonar.sourceEncoding=UTF-8
