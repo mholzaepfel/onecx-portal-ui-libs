@@ -9,9 +9,8 @@
     "build-copy": "npm run build && node copy-build.js",
     "test": "nx run-many -t test",
     "test:ci": "nx run-many -t test --watch=false --browsers=ChromeHeadless --coverage",
-    "sonar": "node run-sonar-tests.js",
     "generate-sonar-properties": "node generate-sonar-project-properties.js",
-    "karma": "node delete-reports.js && rm -r .nx/cache && rm -r test-report.xml && rm -r coverage && rm -r reports"
+    "karma": "rm -r .nx/cache && rm -r test-report.xml && rm -r coverage && rm -r reports && rm -r libs/accelerator/reports"
   },
   "private": true,
   "dependencies": {

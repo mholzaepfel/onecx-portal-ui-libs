@@ -20,7 +20,7 @@ on:
         type: string
 
 jobs:
-  download-artefact:
+  SetupSonar1:
     name: setup-sonar-and-node
     runs-on: ubuntu-latest
     steps:

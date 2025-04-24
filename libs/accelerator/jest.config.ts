@@ -22,13 +22,5 @@ export default {
         reportedFilePath: 'absolute',
       },
     ],
-    [
-      'jest-junit',
-      {
-        outputDirectory: 'reports/accelerator',
-        outputName: 'test-report.xml',
-        reportedFilePath: 'absolute',
-      },
-    ],
   ],
 }

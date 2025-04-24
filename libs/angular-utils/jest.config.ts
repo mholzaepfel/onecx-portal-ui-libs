@@ -32,13 +32,5 @@ export default {
         reportedFilePath: 'absolute',
       },
     ],
-    [
-      'jest-junit',
-      {
-        outputDirectory: 'reports/angular-utils',
-        outputName: 'test-report.xml',
-        reportedFilePath: 'absolute',
-      },
-    ],
   ],
 }
