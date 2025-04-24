@@ -55,6 +55,6 @@ jobs:
             -Dsonar.host.url=$SONAR_URL
             -Dsonar.organization=${{ github.repository_owner }}
             -Dsonar.sourceEncoding=UTF-8
-            -Dsonar.testExecutionReportPaths=./reports/test-report.xml
-            -Dsonar.javascript.lcov.reportPaths=./reports/coverage/lcov.info          
+            -Dsonar.testExecutionReportPaths=reports/test-report.xml
+            -Dsonar.javascript.lcov.reportPaths=reports/coverage/lcov.info          
             -Dsonar.test.inclusions=src/lib/**/*.spec.ts
