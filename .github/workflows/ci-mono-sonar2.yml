@@ -50,7 +50,7 @@ jobs:
         with:
           projectBaseDir: libs/angular-utils/
           args: >
-            -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs
+            -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs_angular-utils
             -Dsonar.host.url=$SONAR_URL
             -Dsonar.organization=${{ github.repository_owner }}
             -Dsonar.sourceEncoding=UTF-8
