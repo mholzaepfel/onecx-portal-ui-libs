@@ -38,6 +38,6 @@ jobs:
           name: package
           path: |
             package.json      
-            /libs/accelorator/reports/
+            libs/accelorator/reports/
           retention-days: 1
           if-no-files-found: ignore

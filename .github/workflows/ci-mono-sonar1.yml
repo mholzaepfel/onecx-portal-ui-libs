@@ -40,7 +40,6 @@ jobs:
           name: ${{ inputs.artifact }}
           path: ${{ inputs.artifactPath }}
       - run: pwd && ls -lsah
-      - run: tree reports
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
