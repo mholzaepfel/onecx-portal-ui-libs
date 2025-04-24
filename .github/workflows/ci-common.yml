@@ -32,12 +32,14 @@ jobs:
         run: |
           npx nx test accelerator --configuration=ci
 
+      - run: pwd && ls -lsah
+
       - name: Upload Sonar artefacts
         uses: actions/upload-artifact@v4
         with:
           name: package
           path: |
             package.json      
-            libs/accelorator/reports/
+            libs/accelerator/reports/
           retention-days: 1
           if-no-files-found: ignore
