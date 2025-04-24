@@ -22,15 +22,15 @@ jobs:
 
       - name: Lint affected
         run: |
-          nx run-many -t lint -p accelerator angular-utils portal-integration-angular
+          npx nx run-many -t lint -p accelerator angular-utils portal-integration-angular
 
       - name: Build affected
         run: |
-          nx run-many -t build -p accelerator angular-utils portal-integration-angular
+          npx nx run-many -t build -p accelerator angular-utils portal-integration-angular
 
       - name: Test affected
         run: |
-          nx run-many -t test -p accelerator angular-utils portal-integration-angular --watch=false --browsers=ChromeHeadless --coverage
+          npx nx run-many -t test -p accelerator angular-utils portal-integration-angular --watch=false --browsers=ChromeHeadless --coverage
 
       - run: pwd && ls -lsah
 
