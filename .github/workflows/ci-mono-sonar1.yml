@@ -51,7 +51,7 @@ jobs:
         with:
           projectBaseDir: libs/accelerator/
           args: >
-            -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs
+            -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs_accelerator
             -Dsonar.host.url=$SONAR_URL
             -Dsonar.organization=${{ github.repository_owner }}
             -Dsonar.sourceEncoding=UTF-8
