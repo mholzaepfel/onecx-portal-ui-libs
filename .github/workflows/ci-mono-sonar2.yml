@@ -55,7 +55,7 @@ jobs:
             -Dsonar.organization=${{ github.repository_owner }}
             -Dsonar.scm.disabled=true
             -Dsonar.sourceEncoding=UTF-8
-            -Dsonar.sources=src
+            -Dsonar.sources=.
             -Dsonar.javascript.coveragePlugin=lcov
             -Dsonar.javascript.lcov.reportPaths=reports/coverage/lcov.info          
             -Dsonar.testExecutionReportPaths=reports/test-report.xml
