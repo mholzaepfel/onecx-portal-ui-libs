@@ -26,9 +26,12 @@ jobs:
 
       - name: Change relativ path to absolute path with sed
         run: |
+          cat libs/angular-utils/reports/coverage/lcov.info
+          echo "bevor"
           PROJECT_ROOT=$(pwd)
           sed -i "s+libs/angular-utils/src+${PROJECT_ROOT}/libs/angular-utils/src+g" libs/angular-utils/reports/coverage/lcov.info
           cat libs/angular-utils/reports/coverage/lcov.info
+          echo "Pfade in lcov.info wurden erfolgreich aktualisiert."
 
       - name: Upload Sonar artefacts
         uses: actions/upload-artifact@v4
