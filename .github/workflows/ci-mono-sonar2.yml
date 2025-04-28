@@ -57,8 +57,8 @@ jobs:
             -Dsonar.sourceEncoding=UTF-8
             -Dsonar.sources=src
             -Dsonar.javascript.coveragePlugin=lcov
-            -Dsonar.javascript.lcov.reportPaths=reports/coverage/lcov.info          
-            -Dsonar.testExecutionReportPaths=reports/test-report.xml
-            -Dsonar.working.directory=reports/.scannerwork
+            -Dsonar.javascript.lcov.reportPaths=./reports/coverage/lcov.info          
+            -Dsonar.testExecutionReportPaths=./reports/test-report.xml
+            -Dsonar.working.directory=./reports/.scannerwork
             -Dsonar.tests=src
-            -Dsonar.test.inclusions=**/*.spec.ts
+            -Dsonar.test.inclusions=src/**/*.spec.ts
