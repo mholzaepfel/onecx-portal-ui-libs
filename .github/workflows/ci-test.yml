@@ -33,6 +33,14 @@ jobs:
           cat libs/angular-utils/reports/coverage/lcov.info
           echo "Pfade in lcov.info wurden erfolgreich aktualisiert."
 
+      - name: find paths
+        run: |
+          paths=$(find libs -type d -maxdepth 1 -mindepth 1 -exec basename {} \;)
+          echo "name=paths::$(echo $paths | jq -R -s -c 'split("\n")[:-1]')" > paths.txt
+          echo "Found paths: $paths"
+
+      - run: pwd && ls -lsah
+
       - name: Upload Sonar artefacts
         uses: actions/upload-artifact@v4
         with:
