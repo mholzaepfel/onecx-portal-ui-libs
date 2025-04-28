@@ -22,7 +22,7 @@ jobs:
 
       - name: Test affected
         run: |
-          npx nx run-many -t test -p accelerator angular-utils portal-integration-angular --watch=false --browsers=ChromeHeadless --coverage
+          npx nx run-many -t test -p accelerator angular-utils portal-integration-angular angular-auth --watch=false --browsers=ChromeHeadless --coverage
 
       - name: Change relativ path to absolute path with sed
         run: |
@@ -42,5 +42,6 @@ jobs:
             libs/accelerator/reports/
             libs/angular-utils/reports/
             libs/portal-integration-angular/reports/
+            reports/
           retention-days: 1
           if-no-files-found: ignore

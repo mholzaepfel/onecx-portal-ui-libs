@@ -1,0 +1,60 @@
+name: My Test Monorepo Project
+
+on:
+  workflow_call:
+    inputs:
+      node:
+        description: 'Node version'
+        default: '20'
+        required: false
+        type: string
+      artifact:
+        description: 'Name of the artifact for the build'
+        default: 'package'
+        required: false
+        type: string
+      artifactPath:
+        description: 'Artifact path'
+        default: '.'
+        required: false
+        type: string
+
+jobs:
+  SetupSonar2:
+    name: setup-sonar-and-node
+    runs-on: ubuntu-latest
+    steps:
+      - run: pwd && ls -lsah
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: pwd && ls -lsah
+      # setup node.js
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node }}
+          cache: 'npm'
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact }}
+          path: ${{ inputs.artifactPath }}
+      - run: pwd && ls -lsah
+      - run: tree libs/portal-integration-angular
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_PIA }}
+          SONAR_URL: 'https://sonarcloud.io'
+        with:
+          projectBaseDir: libs/angular-auth/
+          args: >
+            -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs_angular-auth
+            -Dsonar.host.url=$SONAR_URL
+            -Dsonar.organization=${{ github.repository_owner }}
+            -Dsonar.sourceEncoding=UTF-8
+            -Dsonar.javascript.coveragePlugin=lcov
+            -Dsonar.testExecutionReportPaths=../../reports/angular-auth/sonarqube_report.xml
+            -Dsonar.javascript.lcov.reportPaths=../../reports/angular-auth/coverage/lcov.info          
+            -Dsonar.test.inclusions=src/lib/**/*.spec.ts
