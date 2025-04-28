@@ -8,6 +8,9 @@ on:
       - '*/*'
       - '**'
 
+env:
+  PATHS:
+
 jobs:
   codeql:
     uses: onecx/ci-angular/.github/workflows/angular-codeql.yml@v1
@@ -38,4 +41,9 @@ jobs:
   ci-mono-sonar3:
     needs: ci-test
     uses: ./.github/workflows/ci-mono-sonar3.yml
+    secrets: inherit
+
+  ci-mono-sonar4:
+    needs: ci-test
+    uses: ./.github/workflows/ci-mono-sonar4.yml
     secrets: inherit
