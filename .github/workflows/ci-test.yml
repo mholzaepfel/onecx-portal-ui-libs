@@ -24,6 +24,12 @@ jobs:
         run: |
           npx nx run-many -t test -p accelerator angular-utils portal-integration-angular --watch=false --browsers=ChromeHeadless --coverage
 
+      - name: Change relativ path to absolute path with sed
+        run: |
+          PROJECT_ROOT=$(pwd)
+          sed -i "s+libs/angular-utils/src+${PROJECT_ROOT}/libs/angular-utils/src+g" libs/angular-utils/reports/coverage/lcov.info
+          cat libs/angular-utils/reports/coverage/lcov.info
+
       - name: Upload Sonar artefacts
         uses: actions/upload-artifact@v4
         with:
