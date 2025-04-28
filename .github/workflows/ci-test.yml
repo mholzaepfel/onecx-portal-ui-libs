@@ -39,7 +39,9 @@ jobs:
           echo "name=paths::$(echo $paths | jq -R -s -c 'split("\n")[:-1]')" > paths.txt
           echo "Found paths: $paths"
 
-      - run: pwd && ls -lsah
+      - run: |
+          pwd && ls -lsah
+          cat paths.txt
 
       - name: Upload Sonar artefacts
         uses: actions/upload-artifact@v4
