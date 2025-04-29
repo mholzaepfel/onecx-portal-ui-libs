@@ -28,13 +28,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Print paths
-        run: |
-          echo "Paths to libs: ${{ needs.find-paths.outputs.paths-to-libs }}"
+      - name: Download paths file
+        uses: actions/download-artifact@v4
+        with:
+          name: paths.json
+      - run: ls -lsah
 
       - name: Modify lcov.info files
         run: |
-          paths="${{ needs.find-paths.outputs.paths-to-libs }}"
           for path in $(echo $paths | jq -r '.[]'); do
             lcov_file="reports/${path}/coverage/lcov.info"
             if [ -f "$lcov_file" ]; then
