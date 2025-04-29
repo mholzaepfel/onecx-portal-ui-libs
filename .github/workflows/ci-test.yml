@@ -31,21 +31,13 @@ jobs:
       - name: Download paths file
         uses: actions/download-artifact@v4
         with:
-          name: paths-file
-      - run: ls -lsah
-
+          name: paths-files
       - name: Modify lcov.info files
         run: |
-          for path in $(echo $paths | jq -r '.[]'); do
-            lcov_file="reports/${path}/coverage/lcov.info"
-            if [ -f "$lcov_file" ]; then
-              sed -i "s|^SF:|SF:/|g" "$lcov_file"
-              echo "Modified $lcov_file"
-            else
-              echo "File $lcov_file does not exist"
-            fi
-          done
-
+          while IFS= read -r path; do
+            sed -i 's|^SF:|SF:/|' "$path"
+            echo "Mofied: $path"
+          done < lcov_paths.txt
       - name: Upload Sonar artefacts
         uses: actions/upload-artifact@v4
         with:
