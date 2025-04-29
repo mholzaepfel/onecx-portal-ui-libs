@@ -22,7 +22,7 @@ jobs:
 
       - name: Test affected
         run: |
-          npx nx run-many -t test -p angular-utils --watch=false --browsers=ChromeHeadless --coverage
+          npx nx run-many -t test --watch=false --browsers=ChromeHeadless --coverage
 
       - uses: actions/checkout@v4
         with:
