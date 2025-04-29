@@ -28,7 +28,7 @@ export default {
       'jest-sonar',
       {
         outputDirectory: '<rootDir>/reports/',
-        outputName: 'test-report.xml',
+        outputName: 'sonarqube_report.xml',
         reportedFilePath: 'absolute',
       },
     ],

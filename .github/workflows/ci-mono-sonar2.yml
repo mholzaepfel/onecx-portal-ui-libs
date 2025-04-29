@@ -58,7 +58,7 @@ jobs:
             -Dsonar.sources=src
             -Dsonar.javascript.coveragePlugin=lcov
             -Dsonar.javascript.lcov.reportPaths=./reports/coverage/lcov.info          
-            -Dsonar.testExecutionReportPaths=./reports/test-report.xml
+            -Dsonar.testExecutionReportPaths=./reports/sonarqube_report.xml
             -Dsonar.working.directory=./reports/.scannerwork
             -Dsonar.tests=src
             -Dsonar.test.inclusions=src/**/*.spec.ts
