@@ -19,26 +19,18 @@ export default {
     'jest-preset-angular/build/serializers/html-comment',
   ],
   testMatch: ['<rootDir>/src/lib/**/*.spec.ts'],
-  coverageDirectory: '../../coverage/libs/angular-remote-components',
+  coverageDirectory: '../../reports/angular-remote-components/coverage',
   collectCoverage: true,
-  coverageReporters: ['json', 'lcov', 'text', 'text-summary', 'html'],
+  coverageReporters: ['json', ['lcov', { projectRoot: '/' }], 'text', 'text-summary', 'html'],
   testResultsProcessor: 'jest-sonar-reporter',
   reporters: [
     'default',
     [
       'jest-sonar',
       {
-        outputDirectory: 'reports/angular-remote-components',
+        outputDirectory: './reports/angular-remote-components',
         outputName: 'sonarqube_report.xml',
-        reportedFilePath: 'aboslute',
-      },
-    ],
-    [
-      'jest-junit',
-      {
-        outputDirectory: 'reports/angular-remote-components',
-        outputName: 'test-report.xml',
-        reportedFilePath: 'aboslute',
+        reportedFilePath: 'absolute',
       },
     ],
   ],

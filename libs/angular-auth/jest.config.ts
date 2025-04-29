@@ -21,14 +21,14 @@ export default {
   testMatch: ['<rootDir>/src/lib/**/*.spec.ts'],
   coverageDirectory: '../../reports/angular-auth/coverage',
   collectCoverage: true,
-  coverageReporters: ['json', 'lcov', 'text', 'text-summary', 'html'],
+  coverageReporters: ['json', ['lcov', { projectRoot: '/' }], 'text', 'text-summary', 'html'],
   testResultsProcessor: 'jest-sonar-reporter',
   reporters: [
     'default',
     [
       'jest-sonar',
       {
-        outputDirectory: 'reports/angular-auth',
+        outputDirectory: './reports/angular-auth',
         outputName: 'sonarqube_report.xml',
         reportedFilePath: 'absolute',
       },

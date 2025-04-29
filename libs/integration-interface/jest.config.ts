@@ -7,25 +7,17 @@ export default {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/libs/integration-interface',
+  coverageDirectory: '../../reports/integration-interface/coverage',
   collectCoverage: true,
-  coverageReporters: ['json', 'lcov', 'text', 'text-summary', 'html'],
+  coverageReporters: ['json', ['lcov', { projectRoot: '/' }], 'text', 'text-summary', 'html'],
   testResultsProcessor: 'jest-sonar-reporter',
   reporters: [
     'default',
     [
       'jest-sonar',
       {
-        outputDirectory: 'reports/integration-interface',
+        outputDirectory: './reports/integration-interface',
         outputName: 'sonarqube_report.xml',
-        reportedFilePath: 'absolute',
-      },
-    ],
-    [
-      'jest-junit',
-      {
-        outputDirectory: 'reports/integration-interface',
-        outputName: 'test-report.xml',
         reportedFilePath: 'absolute',
       },
     ],

@@ -10,7 +10,7 @@
     "test": "nx run-many -t test",
     "test:ci": "nx run-many -t test --watch=false --browsers=ChromeHeadless --coverage",
     "generate-sonar-properties": "node generate-sonar-project-properties.js",
-    "karma": "rm -r .nx/cache && rm -r test-report.xml && rm -r coverage && rm -r reports && rm -r libs/accelerator/reports"
+    "karma": "rm -r .nx/cache && rm -r test-report.xml && rm -r reports "
   },
   "private": true,
   "dependencies": {

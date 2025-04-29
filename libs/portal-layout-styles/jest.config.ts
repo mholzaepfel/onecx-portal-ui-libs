@@ -8,25 +8,17 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   testMatch: ['<rootDir>/src/lib/**/*.spec.ts'],
-  coverageDirectory: '../../coverage/libs/portal-layout-styles',
+  coverageDirectory: '../../reports/portal-layout-styles/coverage',
   collectCoverage: true,
-  coverageReporters: ['json', 'lcov', 'text', 'text-summary', 'html'],
+  coverageReporters: ['json', ['lcov', { projectRoot: '/' }], 'text', 'text-summary', 'html'],
   testResultsProcessor: 'jest-sonar-reporter',
   reporters: [
     'default',
     [
       'jest-sonar',
       {
-        outputDirectory: 'reports/portal-layout-styles',
+        outputDirectory: './reports/portal-layout-styles',
         outputName: 'sonarqube_report.xml',
-        reportedFilePath: 'absolute',
-      },
-    ],
-    [
-      'jest-junit',
-      {
-        outputDirectory: 'reports/portal-layout-styles',
-        outputName: 'test-report.xml',
         reportedFilePath: 'absolute',
       },
     ],

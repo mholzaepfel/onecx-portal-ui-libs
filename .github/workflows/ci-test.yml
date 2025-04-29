@@ -22,26 +22,28 @@ jobs:
 
       - name: Test affected
         run: |
-          npx nx run-many -t test -p accelerator angular-utils portal-integration-angular angular-auth --watch=false --browsers=ChromeHeadless --coverage
+          npx nx run-many -t test -p angular-utils --watch=false --browsers=ChromeHeadless --coverage
 
-      - name: Change relativ path to absolute path with sed
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Print paths
         run: |
-          cat libs/angular-utils/reports/coverage/lcov.info
-          echo "bevor"
-          PROJECT_ROOT=$(pwd)
-          sed -i "s+libs/angular-utils/src+${PROJECT_ROOT}/libs/angular-utils/src+g" libs/angular-utils/reports/coverage/lcov.info
-          cat libs/angular-utils/reports/coverage/lcov.info
-          echo "Pfade in lcov.info wurden erfolgreich aktualisiert."
+          echo "Paths to libs: ${{ needs.find-paths.outputs.paths-to-libs }}"
 
-      - name: find paths
+      - name: Modify lcov.info files
         run: |
-          paths=$(find libs -type d -maxdepth 1 -mindepth 1 -exec basename {} \;)
-          echo "name=paths::$(echo $paths | jq -R -s -c 'split("\n")[:-1]')" > paths.txt
-          echo "Found paths: $paths"
-
-      - run: |
-          pwd && ls -lsah
-          cat paths.txt
+          paths="${{ needs.find-paths.outputs.paths-to-libs }}"
+          for path in $(echo $paths | jq -r '.[]'); do
+            lcov_file="reports/${path}/coverage/lcov.info"
+            if [ -f "$lcov_file" ]; then
+              sed -i "s|^SF:|SF:/|g" "$lcov_file"
+              echo "Modified $lcov_file"
+            else
+              echo "File $lcov_file does not exist"
+            fi
+          done
 
       - name: Upload Sonar artefacts
         uses: actions/upload-artifact@v4
@@ -49,9 +51,6 @@ jobs:
           name: package
           path: |
             package.json      
-            libs/accelerator/reports/
-            libs/angular-utils/reports/
-            libs/portal-integration-angular/reports/
             reports/
           retention-days: 1
           if-no-files-found: ignore

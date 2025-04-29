@@ -13,8 +13,5 @@
   "dependencies": {},
   "publishConfig": {
     "access": "public"
-  },
-  "jestSonar": {
-    "reportPath": "reports"
   }
 }
