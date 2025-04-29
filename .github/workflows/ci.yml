@@ -29,8 +29,6 @@ jobs:
     needs: ci-find-paths
     uses: ./.github/workflows/ci-test.yml
     secrets: inherit
-    with:
-      paths-to-libs: ${{ needs.ci-find-paths.outputs.paths-to-libs}}
 
   ci-mono-sonar1:
     needs: ci-test
