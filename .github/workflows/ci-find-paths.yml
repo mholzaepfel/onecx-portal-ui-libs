@@ -26,6 +26,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: paths-file
-          path: paths.json
+          path: reports_paths.txt
           retention-days: 1
           if-no-files-found: ignore
