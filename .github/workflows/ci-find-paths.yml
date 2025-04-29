@@ -18,7 +18,8 @@ jobs:
         id: find-paths
         run: |
           paths=$(find libs -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
-          echo "paths=$(echo $paths | jq -R -s -c 'split(\"\\n\")[:-1]')" > paths.json
+          echo "paths=$(echo $paths | jq -R -s -c 'split(\"\\n\")[:-1]')" >> "$GITHUB_OUTPUT"
+          echo $paths | jq -R -s -c 'split("\n")[:-1]' > paths.json
 
       - name: Upload paths file
         uses: actions/upload-artifact@v4
