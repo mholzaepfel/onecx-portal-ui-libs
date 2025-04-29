@@ -25,7 +25,7 @@ jobs:
     secrets: inherit
 
   ci-find-paths:
-    uses: ./.github/workflow/ci-find-paths.yml
+    uses: ./.github/workflows/ci-find-paths.yml
     secrets: inherit
     with:
       paths-to-libs: ${{ needs.find-paths.outputs.paths-to-libs}}
