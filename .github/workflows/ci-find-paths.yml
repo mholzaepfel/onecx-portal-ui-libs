@@ -6,8 +6,6 @@ on:
 jobs:
   find-paths:
     runs-on: ubuntu-latest
-    outputs:
-      paths-to-libs: ${{ steps.find-paths.outputs.paths }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
