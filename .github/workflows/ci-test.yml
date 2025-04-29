@@ -31,7 +31,7 @@ jobs:
       - name: Download paths file
         uses: actions/download-artifact@v4
         with:
-          name: paths.json
+          name: paths-file
       - run: ls -lsah
 
       - name: Modify lcov.info files
