@@ -16,12 +16,8 @@ jobs:
         id: find-paths
         run: |
           paths=$(find libs -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
-          if [ -f "$path" ]; then
-            sed -i 's|^SF:|SF:/|' "$path"
-            echo "Modified: $path"
-          else
-            echo "File not found: $path"
-          fi
+          for path in $paths; do
+            echo "reports/$path/coverage/lcov.info"
           done > lcov_paths.txt
 
           for path in $paths; do
