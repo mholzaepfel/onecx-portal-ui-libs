@@ -51,6 +51,7 @@ jobs:
           name: package
 
       - run: |
+          ls -lsah
           tree reports/
 
       - name: SonarQube Scan
@@ -60,7 +61,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_URL: 'https://sonarcloud.io'
         with:
-          projectBaseDir: ${{ matrix.path }}
+          projectBaseDir: libs/${{ matrix.path }}/
           args: >
             -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs_${{ matrix.path }}
             -Dsonar.host.url=$SONAR_URL
