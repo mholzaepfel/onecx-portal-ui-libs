@@ -27,7 +27,7 @@ jobs:
         id: set-matrix
         run: |
           matrix=$(cat paths.txt | jq -R -s -c 'split("\n") | map(select(length > 0))')
-          echo "::set-output name=matrix::$matrix"
+          echo "name=matrix" >> $GITHUB_OUTPUT >> $GITHUB_OUTPUT
 
   sonar-scan:
     needs: set-matrix
