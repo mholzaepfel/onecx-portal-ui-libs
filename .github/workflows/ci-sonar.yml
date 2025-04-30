@@ -70,8 +70,8 @@ jobs:
             -Dsonar.sourceEncoding=UTF-8
             -Dsonar.sources=src
             -Dsonar.javascript.coveragePlugin=lcov
-            -Dsonar.javascript.lcov.reportPaths=./reports/${{ matrix.path }}/coverage/lcov.info
-            -Dsonar.testExecutionReportPaths=./reports/${{ matrix.path }}/sonarqube_report.xml
-            -Dsonar.working.directory=./reports/${{ matrix.path }}/.scannerwork
+            -Dsonar.javascript.lcov.reportPaths=../../reports/${{ matrix.path }}/coverage/lcov.info
+            -Dsonar.testExecutionReportPaths=../../reports/${{ matrix.path }}/sonarqube_report.xml
+            -Dsonar.working.directory=../../reports/${{ matrix.path }}/.scannerwork
             -Dsonar.tests=src
             -Dsonar.test.inclusions=src/**/*.spec.ts
