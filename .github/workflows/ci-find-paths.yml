@@ -1,10 +1,10 @@
-name: Monorepo SonarQube Analysis
+name: Dynamic pahtfinder
 
 on:
   workflow_call:
 
 jobs:
-  find-paths:
+  find-path-runner:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -27,9 +27,9 @@ jobs:
       - name: Upload paths file
         uses: actions/upload-artifact@v4
         with:
-          name: paths-files
+          name: path-files
           path: |
             lcov_paths.txt
-            paths.txt
+            raw_paths.txt
           retention-days: 1
           if-no-files-found: ignore

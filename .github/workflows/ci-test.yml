@@ -20,26 +20,25 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Test affected
+      - name: Run Tests
         run: |
           npx nx run-many -t test --watch=false --browsers=ChromeHeadless --coverage
 
       - name: Download paths file
         uses: actions/download-artifact@v4
         with:
-          name: paths-files
+          name: path-files
 
-      - run: ls -lsha
       - name: Modify lcov.info files
         run: |
           while IFS= read -r path; do
           if [ -f "$path" ]; then
             sed -i 's|^SF:|SF:/|' "$path"
-            echo "Modified: $path"
           else
             echo "File not found: $path"
           fi
           done < lcov_paths.txt
+
       - name: Upload Sonar artefacts
         uses: actions/upload-artifact@v4
         with:

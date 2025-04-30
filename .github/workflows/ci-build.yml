@@ -20,6 +20,6 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Build affected
+      - name: Run Build
         run: |
-          npx nx run-many -t build -p accelerator angular-utils portal-integration-angular
+          npx nx run-many -t build

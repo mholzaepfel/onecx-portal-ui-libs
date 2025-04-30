@@ -20,6 +20,6 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Lint affected
+      - name: Run Lint
         run: |
-          npx nx run-many -t lint -p accelerator angular-utils portal-integration-angular
+          npx nx run-many -t lint

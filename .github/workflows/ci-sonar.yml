@@ -26,7 +26,7 @@ jobs:
       - name: Read paths from file
         id: set-matrix
         run: |
-          matrix=$(cat paths.txt | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          matrix=$(cat raw_paths.txt | jq -R -s -c 'split("\n") | map(select(length > 0))')
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
   sonar-scan:
@@ -46,14 +46,10 @@ jobs:
           node-version: ${{ inputs.node }}
           cache: 'npm'
 
-      - name: Download paths
+      - name: Download reports
         uses: actions/download-artifact@v4
         with:
           name: package
-
-      - run: |
-          ls -lsah
-          tree reports/
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
@@ -64,15 +60,20 @@ jobs:
         with:
           projectBaseDir: libs/${{ matrix.path }}/
           args: >
-            -Dsonar.projectKey=mholzaepfel_onecx-portal-ui-libs_${{ matrix.path }}
+            -Dsonar.projectKey=${ GITHUB_REPOSITORY//\//_ }${{ matrix.path }}
             -Dsonar.host.url=$SONAR_URL
             -Dsonar.organization=${{ github.repository_owner }}
             -Dsonar.scm.disabled=true
             -Dsonar.sourceEncoding=UTF-8
-            -Dsonar.sources=src
             -Dsonar.javascript.coveragePlugin=lcov
             -Dsonar.javascript.lcov.reportPaths=../../reports/${{ matrix.path }}/coverage/lcov.info
             -Dsonar.testExecutionReportPaths=../../reports/${{ matrix.path }}/sonarqube_report.xml
             -Dsonar.working.directory=../../reports/${{ matrix.path }}/.scannerwork
-            -Dsonar.tests=src
-            -Dsonar.test.inclusions=src/**/*.spec.ts
+            -Dsonar.javascript.maximumFunctionParameters=10"
+            -Dsonar.typescript.maximumFunctionParameters=10"
+            -Dsonar.cdp.javascript.maximumFunctionParameters=10"
+            -Dsonar.cdp.typescript.maximumFunctionParameters=10"
+            -Dsonar.javascript.exclusions=src/app/shared/generated/**/*"
+            -Dsonar.cpd.exclusions=src//**/*.ts"
+            -Dsonar.coverage.exclusions=*.ts,*.js,src/*.ts,src/**/*.module.ts,src/**/*.main.ts,src/**/*.bootstrap.ts,src/environments/*,src/assets/**/*,src/app/shared/generated/**/*"
+            -Dsonar.test.inclusions=src/**/*.spec.ts"
