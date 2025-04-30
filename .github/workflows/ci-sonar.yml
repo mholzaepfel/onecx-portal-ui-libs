@@ -33,6 +33,7 @@ jobs:
     needs: set-matrix
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         path: ${{ fromJson(needs.set-matrix.outputs.matrix) }}
     steps:
