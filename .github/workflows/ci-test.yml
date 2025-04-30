@@ -24,10 +24,6 @@ jobs:
         run: |
           npx nx run-many -t test --watch=false --browsers=ChromeHeadless --coverage
 
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: Download paths file
         uses: actions/download-artifact@v4
         with:
