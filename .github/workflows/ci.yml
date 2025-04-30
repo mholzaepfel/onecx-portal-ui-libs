@@ -30,22 +30,7 @@ jobs:
     uses: ./.github/workflows/ci-test.yml
     secrets: inherit
 
-  ci-mono-sonar1:
+  ci-sonar:
     needs: ci-test
-    uses: ./.github/workflows/ci-mono-sonar1.yml
-    secrets: inherit
-
-  ci-mono-sonar2:
-    needs: ci-test
-    uses: ./.github/workflows/ci-mono-sonar2.yml
-    secrets: inherit
-
-  ci-mono-sonar3:
-    needs: ci-test
-    uses: ./.github/workflows/ci-mono-sonar3.yml
-    secrets: inherit
-
-  ci-mono-sonar4:
-    needs: ci-test
-    uses: ./.github/workflows/ci-mono-sonar4.yml
+    uses: ./.github/workflows/ci-sonar.yml
     secrets: inherit
