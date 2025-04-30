@@ -60,7 +60,7 @@ jobs:
         with:
           projectBaseDir: libs/${{ matrix.path }}/
           args: >
-            -Dsonar.projectKey=${ GITHUB_REPOSITORY//\//_ }${{ matrix.path }}
+            -Dsonar.projectKey=${{ github.repository_owner }}_${{ github.event.repository.name }}_${{ ${{ matrix.path }}
             -Dsonar.host.url=$SONAR_URL
             -Dsonar.organization=${{ github.repository_owner }}
             -Dsonar.scm.disabled=true
