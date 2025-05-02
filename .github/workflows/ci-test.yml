@@ -24,7 +24,7 @@ jobs:
         run: |
           npx nx run-many -t test --watch=false --browsers=ChromeHeadless --coverage
 
-      - name: Download paths file
+      - name: Download path files
         uses: actions/download-artifact@v4
         with:
           name: path-files

@@ -9,7 +9,6 @@
     "build-copy": "npm run build && node copy-build.js",
     "test": "nx run-many -t test",
     "test:ci": "nx run-many -t test --watch=false --browsers=ChromeHeadless --coverage",
-    "generate-sonar-properties": "node generate-sonar-project-properties.js",
     "karma": "rm -r .nx/cache && rm -r test-report.xml && rm -r reports "
   },
   "private": true,
@@ -103,7 +102,6 @@
     "jest-canvas-mock": "^2.5.2",
     "jest-environment-jsdom": "^29.7.0",
     "jest-environment-node": "^29.7.0",
-    "jest-junit": "^16.0.0",
     "jest-preset-angular": "^14.2.2",
     "jest-sonar": "^0.2.16",
     "jest-sonar-reporter": "^2.0.0",
