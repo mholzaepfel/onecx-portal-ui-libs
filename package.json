@@ -1,15 +1,13 @@
 {
   "name": "@onecx/onecx-portal-ui-libs",
-  "version": "5.34.5",
+  "version": "5.35.1",
   "license": "Apache-2.0",
   "scripts": {
     "sass": "npx sass libs/portal-integration-angular/assets/styles.scss libs/portal-integration-angular/assets/output.css",
     "postinstall": "mkdir -p .nx",
-    "build": "nx run-many -t build",
+    "build": "nx run-many -t build build-migrations",
     "build-copy": "npm run build && node copy-build.js",
-    "test": "nx run-many -t test",
-    "test:ci": "nx run-many -t test --watch=false --browsers=ChromeHeadless --coverage",
-    "karma": "rm -r .nx/cache && rm -r test-report.xml && rm -r reports "
+    "test:ci": "nx run-many -t test --watch=false --browsers=ChromeHeadless --coverage"
   },
   "private": true,
   "dependencies": {
@@ -33,6 +31,7 @@
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",
     "@onecx/portal-layout-styles": "file:libs/portal-layout-styles",
+    "@phenomnomnominal/tsquery": "^6",
     "@storybook/addon-interactions": "^8.3.2",
     "axios": "^1.7.3",
     "chart.js": "^4.4.3",
@@ -103,9 +102,9 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-environment-node": "^29.7.0",
     "jest-preset-angular": "^14.2.2",
+    "jsonc-eslint-parser": "^2.4.0",
     "jest-sonar": "^0.2.16",
     "jest-sonar-reporter": "^2.0.0",
-    "jsonc-eslint-parser": "^2.4.0",
     "msw": "^2.4.9",
     "msw-storybook-addon": "^2.0.2",
     "ng-mocks": "^14.13.1",
@@ -122,7 +121,8 @@
     "sonar-scanner": "^3.1.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "sonarqube-scanner": "^4.3.0"
   },
   "nx": {
     "includedScripts": []

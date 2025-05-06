@@ -7,6 +7,7 @@ export default {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
+  testMatch: ['<rootDir>/src/lib/**/*.spec.ts'],
   coverageDirectory: '../../reports/integration-interface/coverage',
   collectCoverage: true,
   coverageReporters: ['json', ['lcov', { projectRoot: '/' }], 'text', 'text-summary', 'html'],
