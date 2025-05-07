@@ -30,7 +30,7 @@ jobs:
       - name: Find affected paths
         uses: ./.github/actions/pathfinder-modify_lcov
 
-      - name: Upload artefacts
+      - name: Upload report artefacts
         uses: actions/upload-artifact@v4
         with:
           name: package

@@ -4,9 +4,9 @@ description: 'Find paths and modify lcov.info paths for coverage reporting'
 runs:
   using: 'composite'
   steps:
-    - name: Find project paths
+    - name: extract-relavent-paths
       run: |
-        # Find all subdirectories in the 'libs' folder
+        # Find all subdirectories in the 'reports' folder
         paths=$(find reports -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
 
         for path in $paths; do
@@ -24,8 +24,9 @@ runs:
         while IFS= read -r path; do
           if [ -f "$path" ]; then
 
-            # Modify the file in-place: prepend a slash to each 'SF:' line
-            # This ensures absolute paths for SonarQube or other tools
+            # Modify the lcov.info file in-place: prepend a slash to each 'SF:' line
+            # This ensures absolute paths for SonarQube 
+            # "SF:home/..." -> "SF:/home/..." 
             sed -i 's|^SF:|SF:/|' "$path"
           else
             echo "File not found: $path"
@@ -36,9 +37,8 @@ runs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: lcov-paths
+        name: paths
         path: |
-          lcov_paths.txt
           raw_paths.txt
         retention-days: 1
         if-no-files-found: ignore
