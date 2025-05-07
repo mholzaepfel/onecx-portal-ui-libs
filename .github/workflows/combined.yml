@@ -18,6 +18,11 @@ jobs:
         tasks: [build, lint]
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Setup Environment
         uses: ./.github/actions/setup-environment
         with:
