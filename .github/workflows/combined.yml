@@ -15,24 +15,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tasks: [build, lint, test]
+        tasks: [build, lint]
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ inputs.node }}
-          cache: 'npm'
-
-      - uses: nrwl/nx-set-shas@v3
-
-      - name: Install deps
-        run: npm ci
+      - name: Setup Environment
+        uses: ./.github/workflows/setup-environment.yml
 
       - name: Run affected Build
         run: |
-          npx nx affected -t ${{ matrix.tasks }}
+          npx nx run-many -t ${{ matrix.tasks }}
