@@ -81,5 +81,5 @@ jobs:
             -Dsonar.testExecutionReportPaths=../../reports/${{ matrix.path }}/sonarqube_report.xml
             -Dsonar.working.directory=../../reports/${{ matrix.path }}/.scannerwork
             -Dsonar.cpd.exclusions=libs/**/generated/**/*.ts"
-            -Dsonar.coverage.exclusions=**/*.module.ts,**/*.main.ts,**/*.bootstrap.ts,**/environments/**,**/assets/**,**/generated/**,**/*.stories.ts,**/*.harness
+            -Dsonar.coverage.exclusions=**/*.ts,**/*.js,**/*.module.ts,**/*.main.ts,**/environments/**,**/assets/**,**/generated/**,**/*.stories.ts,**/*.harness, 
             -Dsonar.test.inclusions=/**/*.spec.ts"
