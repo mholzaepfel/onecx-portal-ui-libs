@@ -19,7 +19,9 @@ jobs:
 
     steps:
       - name: Setup Environment
-        uses: ./.github/workflows/setup-environment.yml
+        uses: ./.github/actions/setup-environment
+        with:
+          node-version: ${{ inputs.node }}
 
       - name: Run affected Build
         run: |
