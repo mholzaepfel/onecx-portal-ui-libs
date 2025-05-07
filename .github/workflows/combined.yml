@@ -13,6 +13,7 @@ jobs:
   build-affected-libs:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         tasks: [build, lint, test]
 
