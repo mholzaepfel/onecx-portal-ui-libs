@@ -13,25 +13,22 @@ jobs:
     uses: onecx/ci-angular/.github/workflows/angular-codeql.yml@v1
     secrets: inherit
 
-  combined:
-    uses: ./.github/workflows/combined.yml
+  lint:
+    uses: ./.github/workflows/lint.yml
     secrets: inherit
-  #lint:
-  #uses: ./.github/workflows/lint.yml
-  #secrets: inherit
 
-  #build:
-  #uses: ./.github/workflows/build.yml
-  #secrets: inherit
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
 
-  #find-paths:
-  #uses: ./.github/workflows/find-paths.yml
-  #secrets: inherit
+  find-paths:
+    uses: ./.github/workflows/find-paths.yml
+    secrets: inherit
 
-  #test:
-  #needs: find-paths
-  #uses: ./.github/workflows/test.yml
-  #secrets: inherit
+  test:
+    needs: find-paths
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
 
   #sonar:
   #needs: test

@@ -2,24 +2,27 @@ name: lint
 
 on:
   workflow_call:
+    inputs:
+      node:
+        description: 'Node version'
+        default: '20'
+        required: false
+        type: string
 
 jobs:
   lint-affected-libs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - name: Setup Environment
+        uses: ./.github/actions/setup-environment
         with:
-          node-version: 20
+          node-version: ${{ inputs.node }}
 
-      - uses: nrwl/nx-set-shas@v3
-
-      - name: Install deps
-        run: npm ci
-
-      - name: Run affected Lint
+      - name: Run affected Build
         run: |
-          npx nx affected -t lint
+          npx nx run-many -t lint
