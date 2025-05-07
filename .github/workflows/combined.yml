@@ -1,0 +1,37 @@
+name: combind build, lint, test
+
+on:
+  workflow_call:
+    inputs:
+      node:
+        description: 'Node version'
+        default: '20'
+        required: false
+        type: string
+
+jobs:
+  build-affected-libs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tasks: [build, lint, test]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node }}
+          cache: 'npm'
+
+      - uses: nrwl/nx-set-shas@v3
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run affected Build
+        run: |
+          npx nx affected -t ${{ matrix.tasks }}
