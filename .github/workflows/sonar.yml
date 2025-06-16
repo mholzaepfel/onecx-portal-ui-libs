@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+      run_scan: ${{ steps.set-matrix.outputs.run_scan }}
 
     steps:
       - name: Checkout
@@ -32,15 +33,21 @@ jobs:
             # map(select(length > 0)): remove empty lines
             matrix=$(cat coverage-directories.txt | jq -R -s -c 'split("\n") | map(select(length > 0))')
 
-          else 
-          matrix='["__empty__"]'
+            run_scan=true
+          else
+            matrix = '[]'
+            run_scan=falste
           fi
 
           # Export the result as a GitHub Actions output variable named "matrix"
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
+          # Export a flag indicating whether the scan job should run (true if the file is not empty)
+          echo "run_scan=$run_scan" >> $GITHUB_OUTPUT
+
   sonar-scan:
     needs: set-matrix
+    if: needs.set-matrix.outputs.run_scan == 'true'
     runs-on: ubuntu-latest
 
     strategy:
@@ -61,7 +68,6 @@ jobs:
           name: package
 
       - name: Run SonarCloud Scan
-        if: matrix.path != '__empty__'
         uses: ./.github/actions/sonarcloud-scan
         with:
           path: ${{matrix.path}}
