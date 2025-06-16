@@ -17,4 +17,4 @@ jobs:
 
       - name: Run affected Build
         run: |
-          npx nx affected -t build
+          npx nx run-many -t build

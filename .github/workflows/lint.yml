@@ -17,4 +17,4 @@ jobs:
 
       - name: Run affected Lint
         run: |
-          npx nx affected -t lint
+          npx nx run-many -t lint
