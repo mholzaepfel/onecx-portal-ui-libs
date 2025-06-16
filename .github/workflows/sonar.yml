@@ -36,7 +36,7 @@ jobs:
             run_scan=true
           else
             matrix = '[]'
-            run_scan=falste
+            run_scan=false
           fi
 
           # Export the result as a GitHub Actions output variable named "matrix"
