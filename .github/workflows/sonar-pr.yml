@@ -1,10 +1,7 @@
 name: SonarQube Pull Request
 
 on:
-  workflow_run:
-    workflows: ['On PR']
-    types:
-      - completed
+  workflow_call:
 
 jobs:
   set-matrix:
