@@ -1,5 +1,5 @@
 name: 'setup-environment'
-description: 'Check out repo, setup Node.js, install dependencies'
+description: 'Setup Node.js, install dependencies'
 inputs:
   node:
     description: 'Node version'
@@ -14,10 +14,6 @@ runs:
       with:
         node-version: ${{ inputs.node }}
         cache: 'npm'
-        cache-dependency-path: |
-          .nx
-          package-lock.json
-          libs/**/package-lock.json
 
     - name: Set SHAs for affected commands
       uses: nrwl/nx-set-shas@v3
