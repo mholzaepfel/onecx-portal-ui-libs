@@ -18,8 +18,3 @@ jobs:
   ci-common:
     uses: ./.github/workflows/ci-common.yml
     secrets: inherit
-
-  sonar-pr:
-    needs: ci-common
-    uses: ./.github/workflows/sonar-pr.yml
-    secrets: inherit
