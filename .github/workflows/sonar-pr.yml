@@ -72,7 +72,7 @@ jobs:
           git remote add upstream ${{ github.event.repository.clone_url }}
           git fetch upstream
           git checkout -B ${{ fromJson(steps.get_pr_data.outputs.data).base.ref }} upstream/${{ fromJson(steps.get_pr_data.outputs.data).base.ref }}
-          git checkout '$BRANCH_NAME'
+          git checkout "$BRANCH_NAME"
           git clean -ffdx && git reset --hard HEAD
 
       - name: Download reports
