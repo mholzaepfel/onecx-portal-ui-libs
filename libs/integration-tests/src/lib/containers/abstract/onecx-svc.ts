@@ -7,11 +7,8 @@ export abstract class SvcContainer extends GenericContainer {
     databaseUsername: '',
     databasePassword: '',
   }
-
   protected shouldCreateDatabase = true
-
   private port = 8080
-
   private defaultHealthCheck: HealthCheck = {
     test: ['CMD-SHELL', `curl --head -fsS http://localhost:${this.port}/q/health`],
     interval: 10_000,
