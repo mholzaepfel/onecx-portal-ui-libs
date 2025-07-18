@@ -1,3 +1,45 @@
+## [5.45.1](https://github.com/onecx/onecx-portal-ui-libs/compare/v5.45.0...v5.45.1) (2025-07-17)
+
+### Bug Fixes
+
+* improve topbar layout and re-set mobile breakpoint ([#817](https://github.com/onecx/onecx-portal-ui-libs/issues/817)) ([e9e82d0](https://github.com/onecx/onecx-portal-ui-libs/commit/e9e82d03ec0723dc58f5cdc7e8289bd8780ccc6b))
+
+## [5.45.0](https://github.com/onecx/onecx-portal-ui-libs/compare/v5.44.0...v5.45.0) (2025-07-15)
+
+### Features
+
+* cleaned bff testcontainer ([#804](https://github.com/onecx/onecx-portal-ui-libs/issues/804)) ([12716dc](https://github.com/onecx/onecx-portal-ui-libs/commit/12716dc6750f952ab062081749678950d28801b8))
+* cleaned UI testcontainer ([#803](https://github.com/onecx/onecx-portal-ui-libs/issues/803)) ([b6ecd5b](https://github.com/onecx/onecx-portal-ui-libs/commit/b6ecd5b85abf75da7e4f3bc7cb95928331dc7dd8))
+* deprecate unused data from the UserProfileTopic ([#783](https://github.com/onecx/onecx-portal-ui-libs/issues/783)) ([0488363](https://github.com/onecx/onecx-portal-ui-libs/commit/04883632ea6953b432bbef4107a0e4ee98bc387c)), closes [#782](https://github.com/onecx/onecx-portal-ui-libs/issues/782) [#784](https://github.com/onecx/onecx-portal-ui-libs/issues/784) [#779](https://github.com/onecx/onecx-portal-ui-libs/issues/779)
+
+### Bug Fixes
+
+* topic publish await v5 ([#815](https://github.com/onecx/onecx-portal-ui-libs/issues/815)) ([1739d93](https://github.com/onecx/onecx-portal-ui-libs/commit/1739d934f3081ee8f310240dea9823049702779b))
+
+## [5.44.0](https://github.com/onecx/onecx-portal-ui-libs/compare/v5.43.0...v5.44.0) (2025-07-03)
+
+### Features
+
+* disable integration tests ([#796](https://github.com/onecx/onecx-portal-ui-libs/issues/796)) ([4d3b62a](https://github.com/onecx/onecx-portal-ui-libs/commit/4d3b62ab751415eb74c8da42b801bf30b30f801e))
+* prepare testcontainers ([#757](https://github.com/onecx/onecx-portal-ui-libs/issues/757)) ([52c92e3](https://github.com/onecx/onecx-portal-ui-libs/commit/52c92e3c85e4bb2159524b1e026db9e23f797adf))
+
+### Bug Fixes
+
+* fix storybook build for v5 ([1229b66](https://github.com/onecx/onecx-portal-ui-libs/commit/1229b66ac4c3f69f3f2eb9d6a877343ce69dff02))
+* multiselect harness ([#797](https://github.com/onecx/onecx-portal-ui-libs/issues/797)) ([3401eee](https://github.com/onecx/onecx-portal-ui-libs/commit/3401eee76c5219cb8a5a727f18bb6fab11a111f6))
+* release config for v5 ([#794](https://github.com/onecx/onecx-portal-ui-libs/issues/794)) ([cc484a9](https://github.com/onecx/onecx-portal-ui-libs/commit/cc484a9051d056b6e0add22ec69a17deb3c7d7f5))
+* rename title and subtitle to header and subheader ([#775](https://github.com/onecx/onecx-portal-ui-libs/issues/775)) ([2052efa](https://github.com/onecx/onecx-portal-ui-libs/commit/2052efa0a7c3c4283210c10649b8f24a10321eca))
+* revert v5 config ([#798](https://github.com/onecx/onecx-portal-ui-libs/issues/798)) ([27fefe0](https://github.com/onecx/onecx-portal-ui-libs/commit/27fefe0be2842b796bdfcb21148d6fb48e37f3a5))
+
+### Chores
+
+* merge main into v5 ([#792](https://github.com/onecx/onecx-portal-ui-libs/issues/792)) ([887810d](https://github.com/onecx/onecx-portal-ui-libs/commit/887810db55c8cbb88b946336fc98bc304dc1f2f3)), closes [#782](https://github.com/onecx/onecx-portal-ui-libs/issues/782) [#784](https://github.com/onecx/onecx-portal-ui-libs/issues/784) [#779](https://github.com/onecx/onecx-portal-ui-libs/issues/779)
+
+### Refactoring
+
+* add v5 to release.config ([#777](https://github.com/onecx/onecx-portal-ui-libs/issues/777)) ([57f1d30](https://github.com/onecx/onecx-portal-ui-libs/commit/57f1d30dcef4d3764c1f6cc91a31c1c0e2ddcf64))
+* **release:** update release channel for v5 ([a4ecd02](https://github.com/onecx/onecx-portal-ui-libs/commit/a4ecd020d6b7912825d0843b3863a72f453fcd64))
+
 ## [5.43.0](https://github.com/onecx/onecx-portal-ui-libs/compare/v5.42.0...v5.43.0) (2025-06-16)
 
 ### Features
