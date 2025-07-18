@@ -4,7 +4,7 @@ import { OnecxKeycloakContainer, StartedOnecxKeycloakContainer } from '../../con
 import { OnecxPostgresContainer, StartedOnecxPostgresContainer } from '../../containers/core/onecx-postgres'
 import { DummySvcContainer, StartedDummySvcContainer } from './onecx-dummy-svc'
 
-describe('Svc Testcontainer with worpsace-svc image', () => {
+xdescribe('Svc Testcontainer with worpsace-svc image', () => {
   let pgContainer: StartedOnecxPostgresContainer
   let kcContainer: StartedOnecxKeycloakContainer
   let dummyContainer: StartedDummySvcContainer

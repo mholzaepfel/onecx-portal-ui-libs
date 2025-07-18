@@ -1,7 +1,7 @@
 export function createReportsConfig(projectName: string) {
   return {
     testMatch: ['<rootDir>/src/lib/**/*.spec.ts'],
-    coverageDirectory: `../../reports/${projectName}/coverage`,
+    coverageDirectory: `./reports/${projectName}/coverage`,
     collectCoverage: true,
     coverageReporters: ['json', ['lcov', { projectRoot: '/' }], 'text', 'text-summary', 'html'],
     reporters: [
