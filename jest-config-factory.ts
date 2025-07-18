@@ -4,7 +4,6 @@ export function createReportsConfig(projectName: string) {
     coverageDirectory: `../../reports/${projectName}/coverage`,
     collectCoverage: true,
     coverageReporters: ['json', ['lcov', { projectRoot: '/' }], 'text', 'text-summary', 'html'],
-    testResultsProcessor: 'jest-sonar-reporter',
     reporters: [
       'default',
       [
