@@ -17,9 +17,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download reports
-        uses: dawidd6/action-download-artifact@v11
+        uses: actions/download-artifact@v4
         with:
-          run_id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ github.event.workflow_run.id }}
           name: coverage-reports
 
       - name: Find affected lib coverage directories
@@ -42,7 +42,8 @@ jobs:
         path: ${{ fromJson(needs.set-matrix.outputs.matrix) }}
 
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download github-action-pr
+        uses: actions/download-artifact@v4
         with:
           run-id: ${{ github.event.workflow_run.id }}
           name: github-action-pr
@@ -76,7 +77,7 @@ jobs:
           git clean -ffdx && git reset --hard HEAD
 
       - name: Download reports
-        uses: actions/download-artifact@vactions/download-artifact@v4
+        uses: actions/download-artifact@v4
         with:
           run-id: ${{ github.event.workflow_run.id }}
           name: coverage-reports
