@@ -12,6 +12,10 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,9 +36,6 @@ jobs:
   sonar-scan:
     needs: set-matrix
     runs-on: ubuntu-latest
-
-    if: >
-      github.event.workflow_run.event == 'pull_request'
 
     strategy:
       fail-fast: false
