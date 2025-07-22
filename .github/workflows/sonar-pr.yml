@@ -23,7 +23,10 @@ jobs:
       - name: Download reports
         uses: actions/download-artifact@v4
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: mholzaepfel/onecx-portal-ui-libs
           name: coverage-reports
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Find affected lib coverage directories
         id: set-matrix
@@ -45,6 +48,9 @@ jobs:
       - name: Download github-action-pr
         uses: actions/download-artifact@v4
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: mholzaepfel/onecx-portal-ui-libs
+          run-id: ${{ github.event.workflow_run.id }}
           name: github-action-pr
 
       - uses: juliangruber/read-file-action@v1
@@ -79,7 +85,10 @@ jobs:
 
         uses: actions/download-artifact@v4
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: mholzaepfel/onecx-portal-ui-libs
           name: coverage-reports
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Normalize lcov.info for SonarCloud
         run: |
