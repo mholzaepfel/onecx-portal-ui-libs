@@ -24,7 +24,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: mholzaepfel/onecx-portal-ui-libs
           name: coverage-reports
           run-id: ${{ github.event.workflow_run.id }}
 
@@ -49,7 +48,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: mholzaepfel/onecx-portal-ui-libs
           run-id: ${{ github.event.workflow_run.id }}
           name: github-action-pr
 
@@ -86,7 +84,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: mholzaepfel/onecx-portal-ui-libs
           name: coverage-reports
           run-id: ${{ github.event.workflow_run.id }}
 
