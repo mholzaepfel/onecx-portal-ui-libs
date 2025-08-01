@@ -1,5 +1,5 @@
-name: 'Docker Image Pre-pull'
-description: 'Pre-pull Docker images for integration tests'
+name: 'Docker Image Cache'
+description: 'Cache Docker images for integration tests to avoid rate limits'
 inputs:
   env-file-path:
     description: 'Path to the env.ts file containing image definitions'
@@ -9,7 +9,8 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Extract and pull Docker images
+    - name: Extract image names from env file
+      id: extract-images
       run: |
         # Extract image names from env.ts file
         ENV_FILE="${{ inputs.env-file-path }}"
@@ -40,24 +41,80 @@ runs:
         echo "OneCX images found:"
         echo "$ONECX_IMAGES"
 
-        # Create a list of all images to pull
+        # Create a comprehensive list of all images
         ALL_IMAGES=""
         [ -n "$POSTGRES_IMAGE" ] && ALL_IMAGES="$POSTGRES_IMAGE"
         [ -n "$KEYCLOAK_IMAGE" ] && ALL_IMAGES="$ALL_IMAGES $KEYCLOAK_IMAGE"
         ALL_IMAGES="$ALL_IMAGES $ONECX_IMAGES"
 
+        # Clean up and create final image list
+        FINAL_IMAGES=$(echo "$ALL_IMAGES" | tr ' ' '\n' | grep -v '^$' | sort -u | tr '\n' ' ')
+
+        # Generate cache key based on image list
+        CACHE_KEY=$(echo "$FINAL_IMAGES" | sha256sum | cut -d' ' -f1)
+
+        echo "images=$FINAL_IMAGES" >> $GITHUB_OUTPUT
+        echo "cache-key=docker-images-$CACHE_KEY" >> $GITHUB_OUTPUT
+        echo "postgres=$POSTGRES_IMAGE" >> $GITHUB_OUTPUT
+        echo "keycloak=$KEYCLOAK_IMAGE" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Cache Docker images
+      id: cache-docker
+      uses: actions/cache@v4
+      with:
+        path: /tmp/docker-images
+        key: ${{ steps.extract-images.outputs.cache-key }}
+        restore-keys: |
+          docker-images-
+
+    - name: Load cached Docker images
+      if: steps.cache-docker.outputs.cache-hit == 'true'
+      run: |
+        echo "Loading cached Docker images..."
+        if [ -d "/tmp/docker-images" ]; then
+          for image_file in /tmp/docker-images/*.tar; do
+            if [ -f "$image_file" ]; then
+              echo "Loading $(basename "$image_file" .tar)..."
+              docker load < "$image_file"
+            fi
+          done
+          echo "✅ All cached images loaded successfully"
+          docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}\t{{.CreatedSince}}"
+        fi
+      shell: bash
+
+    - name: Pull and cache Docker images
+      if: steps.cache-docker.outputs.cache-hit != 'true'
+      run: |
+        echo "Cache miss - pulling and caching Docker images..."
+
+        # Create cache directory
+        mkdir -p /tmp/docker-images
+
+        # Get the image list
+        IMAGES="${{ steps.extract-images.outputs.images }}"
+
         echo "Starting parallel image pulls..."
 
         # Pull images in parallel for faster execution
-        echo "$ALL_IMAGES" | tr ' ' '\n' | grep -v '^$' | xargs -I {} -P 4 sh -c '
+        echo "$IMAGES" | tr ' ' '\n' | grep -v '^$' | xargs -I {} -P 4 sh -c '
           echo "Pulling {}..."
           if docker pull "{}"; then
             echo "✅ Successfully pulled {}"
+            # Save image to tar file for caching
+            IMAGE_FILE=$(echo "{}" | sed "s/[\/:]/_/g")
+            echo "Saving {} to /tmp/docker-images/${IMAGE_FILE}.tar"
+            docker save "{}" > "/tmp/docker-images/${IMAGE_FILE}.tar"
+            echo "✅ Cached {}"
           else
             echo "❌ Failed to pull {}"
           fi
         '
 
-        echo "All image pulls completed. Current Docker images:"
+        echo "All image pulls and caching completed."
+        echo "Cache contents:"
+        ls -la /tmp/docker-images/
+        echo "Current Docker images:"
         docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}\t{{.CreatedSince}}"
       shell: bash
