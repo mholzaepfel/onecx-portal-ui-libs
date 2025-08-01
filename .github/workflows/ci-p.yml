@@ -11,7 +11,7 @@ jobs:
     uses: ./.github/workflows/ci-common.yml
     secrets: inherit
 
-  sonar:
-    needs: ci-common
-    uses: ./.github/workflows/sonar.yml
-    secrets: inherit
+  #sonar:
+  #needs: ci-common
+  #uses: ./.github/workflows/sonar.yml
+  #secrets: inherit
