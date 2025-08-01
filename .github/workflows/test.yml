@@ -15,7 +15,7 @@ jobs:
       - name: Setup Environment
         uses: ./.github/actions/setup-environment
 
-      - name: Run Integration Tests
+      - name: Docker Caching
         uses: ./.github/actions/docker-cache
 
       - name: Run affected Tests

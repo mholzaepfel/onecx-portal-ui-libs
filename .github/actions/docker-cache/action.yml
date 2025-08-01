@@ -9,6 +9,13 @@ inputs:
     description: 'Additional suffix for cache key'
     default: ''
     required: false
+outputs:
+  cache-hit:
+    description: 'Whether the cache was hit'
+    value: ${{ steps.cache-docker-images.outputs.cache-hit }}
+  cache-key:
+    description: 'The cache key used'
+    value: docker-images-${{ runner.os }}-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}
 
 runs:
   using: 'composite'
@@ -16,6 +23,8 @@ runs:
     - name: Create Docker images cache directory
       run: |
         mkdir -p /tmp/docker-images
+        echo "Cache directory created at /tmp/docker-images"
+        echo "Current cache key will be: docker-images-${{ runner.os }}-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}"
       shell: bash
 
     - name: Cache Docker images
@@ -23,23 +32,27 @@ runs:
       uses: actions/cache@v4
       with:
         path: /tmp/docker-images
-        key: docker-images-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}
+        key: docker-images-${{ runner.os }}-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}
         restore-keys: |
-          docker-images-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}
+          docker-images-${{ runner.os }}-
 
     - name: Load cached Docker images
       if: steps.cache-docker-images.outputs.cache-hit == 'true'
       run: |
-        echo "Loading cached Docker images..."
+        echo "✅ Cache hit! Loading cached Docker images..."
+        echo "Cache hit status: ${{ steps.cache-docker-images.outputs.cache-hit }}"
         if [ -f /tmp/docker-images/postgres.tar ]; then
           docker load < /tmp/docker-images/postgres.tar
+          echo "✅ Loaded postgres.tar"
         fi
         if [ -f /tmp/docker-images/keycloak.tar ]; then
           docker load < /tmp/docker-images/keycloak.tar
+          echo "✅ Loaded keycloak.tar"
         fi
         for file in /tmp/docker-images/onecx-*.tar; do
           if [ -f "$file" ]; then
             docker load < "$file" || echo "Failed to load $file, continuing..."
+            echo "✅ Loaded $(basename $file)"
           fi
         done
         echo "Cached Docker images loaded"
@@ -49,7 +62,10 @@ runs:
     - name: Pull and cache Docker images
       if: steps.cache-docker-images.outputs.cache-hit != 'true'
       run: |
-        echo "Pulling and caching Docker images..."
+        echo "❌ Cache miss! Pulling and caching Docker images..."
+        echo "Cache hit status: ${{ steps.cache-docker-images.outputs.cache-hit }}"
+        echo "Files in cache directory before pull:"
+        ls -la /tmp/docker-images/ || echo "Cache directory is empty"
 
         # Extract image names from env.ts file
         ENV_FILE="${{ inputs.env-file-path }}"
@@ -99,5 +115,9 @@ runs:
         done
 
         echo "Docker images pulled and cached"
+        echo "Files in cache directory after caching:"
+        ls -la /tmp/docker-images/
+        echo "Total cache size:"
+        du -sh /tmp/docker-images/
         docker images
       shell: bash
