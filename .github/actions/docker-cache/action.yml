@@ -21,9 +21,20 @@ runs:
       run: |
         mkdir -p /tmp/docker-images
         echo "Cache directory created at /tmp/docker-images"
-        CACHE_KEY="docker-images-${{ runner.os }}-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}"
-        echo "Current cache key will be: $CACHE_KEY"
-        echo "CACHE_KEY=$CACHE_KEY" >> $GITHUB_ENV
+
+        # Debug the env file path
+        echo "Env file path: ${{ inputs.env-file-path }}"
+        if [ -f "${{ inputs.env-file-path }}" ]; then
+          echo "✅ Env file exists"
+          echo "File hash: ${{ hashFiles(inputs.env-file-path) }}"
+        else
+          echo "❌ Env file does not exist at specified path"
+          echo "Current directory: $(pwd)"
+          echo "Files in current directory:"
+          ls -la
+        fi
+
+        echo "Cache key will be: docker-images-${{ runner.os }}-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}"
       shell: bash
 
     - name: Cache Docker images
@@ -31,7 +42,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: /tmp/docker-images
-        key: ${{ env.CACHE_KEY }}
+        key: docker-images-${{ runner.os }}-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}
         restore-keys: |
           docker-images-${{ runner.os }}-
 
@@ -92,9 +103,23 @@ runs:
 
         # Extract OneCX images from both objects using grep and sed
         echo "Extracting OneCX images from env.ts..."
-        ONECX_IMAGES=$(grep -E "(ONECX_.*_SVC|ONECX_SHELL_.*): " "$ENV_FILE" | \
+        echo "Content of env file:"
+        cat "$ENV_FILE"
+        echo "---"
+
+        # Extract from onecxSvcImages object
+        SVC_IMAGES=$(grep -A 20 "export const onecxSvcImages" "$ENV_FILE" | \
+                    grep "ONECX_.*:" | \
+                    sed "s/.*\`\${DOCKER_REPO}\/\([^:]*:[^']*\)\`.*/ghcr.io\/onecx\/\1/" | \
+                    sed "s/.*\${DOCKER_REPO}\/\([^:]*:[^']*\).*/ghcr.io\/onecx\/\1/")
+
+        # Extract from onecxShellUiImages object  
+        SHELL_IMAGES=$(grep -A 10 "export const onecxShellUiImages" "$ENV_FILE" | \
+                      grep "ONECX_.*:" | \
                       sed "s/.*\`\${DOCKER_REPO}\/\([^:]*:[^']*\)\`.*/ghcr.io\/onecx\/\1/" | \
-                      sed "s/.*['\"]ghcr\.io\/onecx\/\([^'\"]*\)['\"].*/ghcr.io\/onecx\/\1/")
+                      sed "s/.*\${DOCKER_REPO}\/\([^:]*:[^']*\).*/ghcr.io\/onecx\/\1/")
+
+        ONECX_IMAGES=$(echo -e "$SVC_IMAGES\n$SHELL_IMAGES" | grep -v "^$")
 
         echo "OneCX images found:"
         echo "$ONECX_IMAGES"
@@ -102,14 +127,26 @@ runs:
         # Pull and save OneCX images
         echo "$ONECX_IMAGES" | while read -r image; do
           if [ -n "$image" ] && [[ "$image" == ghcr.io/onecx/* ]]; then
+            echo "Attempting to pull: $image"
             if docker pull "$image"; then
               # Extract service name for filename
               service_name=$(echo "$image" | sed 's/.*onecx-//' | sed 's/:.*$//')
-              docker save "$image" -o "/tmp/docker-images/onecx-${service_name}.tar"
-              echo "Cached $image"
+              tar_file="/tmp/docker-images/onecx-${service_name}.tar"
+              echo "Saving $image to $tar_file"
+              docker save "$image" -o "$tar_file"
+              
+              # Check file size
+              if [ -f "$tar_file" ]; then
+                file_size=$(du -h "$tar_file" | cut -f1)
+                echo "✅ Cached $image (size: $file_size)"
+              else
+                echo "❌ Failed to create tar file for $image"
+              fi
             else
-              echo "Failed to pull $image, continuing..."
+              echo "❌ Failed to pull $image, continuing..."
             fi
+          else
+            echo "⚠️ Skipping invalid image: '$image'"
           fi
         done
 
@@ -117,6 +154,34 @@ runs:
         echo "Files in cache directory after caching:"
         ls -la /tmp/docker-images/
         echo "Total cache size:"
-        du -sh /tmp/docker-images/
+        TOTAL_SIZE=$(du -sh /tmp/docker-images/ | cut -f1)
+        echo "Cache size: $TOTAL_SIZE"
+
+        # Check if cache is too large (GitHub has 10GB limit)
+        SIZE_BYTES=$(du -sb /tmp/docker-images/ | cut -f1)
+        if [ "$SIZE_BYTES" -gt 9000000000 ]; then
+          echo "⚠️ WARNING: Cache size ($TOTAL_SIZE) is approaching GitHub's 10GB limit!"
+        fi
+
+        echo "Docker images currently available:"
         docker images
+
+        # Force cache to save by checking if cache directory exists and has content
+        if [ -d "/tmp/docker-images" ] && [ "$(ls -A /tmp/docker-images)" ]; then
+          echo "✅ Cache directory has content, should be saved to GitHub Actions cache"
+          echo "Cache will be saved with key: docker-images-${{ runner.os }}-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}"
+        else
+          echo "❌ Cache directory is empty or doesn't exist"
+        fi
+      shell: bash
+
+    - name: Verify cache setup
+      run: |
+        echo "=== CACHE VERIFICATION ==="
+        echo "Cache directory: /tmp/docker-images"
+        echo "Directory exists: $([ -d /tmp/docker-images ] && echo 'YES' || echo 'NO')"
+        echo "Directory has files: $([ -n "$(ls -A /tmp/docker-images 2>/dev/null)" ] && echo 'YES' || echo 'NO')"
+        echo "Cache key used: docker-images-${{ runner.os }}-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}"
+        echo "Cache hit status: ${{ steps.cache-docker-images.outputs.cache-hit }}"
+        echo "=== END VERIFICATION ==="
       shell: bash
