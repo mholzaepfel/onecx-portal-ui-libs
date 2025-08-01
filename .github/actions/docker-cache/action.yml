@@ -13,9 +13,6 @@ outputs:
   cache-hit:
     description: 'Whether the cache was hit'
     value: ${{ steps.cache-docker-images.outputs.cache-hit }}
-  cache-key:
-    description: 'The cache key used'
-    value: docker-images-${{ runner.os }}-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}
 
 runs:
   using: 'composite'
@@ -24,7 +21,9 @@ runs:
       run: |
         mkdir -p /tmp/docker-images
         echo "Cache directory created at /tmp/docker-images"
-        echo "Current cache key will be: docker-images-${{ runner.os }}-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}"
+        CACHE_KEY="docker-images-${{ runner.os }}-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}"
+        echo "Current cache key will be: $CACHE_KEY"
+        echo "CACHE_KEY=$CACHE_KEY" >> $GITHUB_ENV
       shell: bash
 
     - name: Cache Docker images
@@ -32,7 +31,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: /tmp/docker-images
-        key: docker-images-${{ runner.os }}-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}
+        key: ${{ env.CACHE_KEY }}
         restore-keys: |
           docker-images-${{ runner.os }}-
 
