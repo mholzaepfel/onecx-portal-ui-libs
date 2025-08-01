@@ -8,14 +8,29 @@ xdescribe('Svc Testcontainer with worpsace-svc image', () => {
   let pgContainer: StartedOnecxPostgresContainer
   let kcContainer: StartedOnecxKeycloakContainer
   let dummyContainer: StartedDummySvcContainer
+  let network: StartedNetwork
 
   beforeAll(async () => {
-    const network: StartedNetwork = await new Network().start()
-    pgContainer = await new OnecxPostgresContainer(POSTGRES).withNetwork(network).start()
-    kcContainer = await new OnecxKeycloakContainer(KEYCLOAK, pgContainer).withNetwork(network).start()
-    dummyContainer = await new DummySvcContainer(onecxSvcImages.ONECX_WORKSPACE_SVC, pgContainer, kcContainer)
-      .withNetwork(network)
-      .start()
+    try {
+      network = await new Network().start()
+      pgContainer = await new OnecxPostgresContainer(POSTGRES).withNetwork(network).start()
+      kcContainer = await new OnecxKeycloakContainer(KEYCLOAK, pgContainer).withNetwork(network).start()
+      dummyContainer = await new DummySvcContainer(onecxSvcImages.ONECX_WORKSPACE_SVC, pgContainer, kcContainer)
+        .withNetwork(network)
+        .start()
+    } catch (error) {
+      console.error('Failed to start containers:', error)
+      // Cleanup on failure
+      try {
+        if (dummyContainer) await dummyContainer.stop()
+        if (kcContainer) await kcContainer.stop()
+        if (pgContainer) await pgContainer.stop()
+        if (network) await network.stop()
+      } catch (cleanupError) {
+        console.error('Cleanup failed:', cleanupError)
+      }
+      throw error
+    }
   })
 
   it('database should be created', async () => {
@@ -46,8 +61,21 @@ xdescribe('Svc Testcontainer with worpsace-svc image', () => {
   })
 
   afterAll(async () => {
-    await dummyContainer.stop()
-    await kcContainer.stop()
-    await pgContainer.stop()
+    const stopPromises = []
+
+    try {
+      if (dummyContainer)
+        stopPromises.push(dummyContainer.stop().catch((e) => console.warn('Failed to stop dummy service:', e)))
+      if (kcContainer) stopPromises.push(kcContainer.stop().catch((e) => console.warn('Failed to stop Keycloak:', e)))
+      if (pgContainer) stopPromises.push(pgContainer.stop().catch((e) => console.warn('Failed to stop Postgres:', e)))
+
+      await Promise.allSettled(stopPromises)
+
+      if (network) {
+        await network.stop().catch((e) => console.warn('Failed to stop network:', e))
+      }
+    } catch (error) {
+      console.warn('Error during cleanup:', error)
+    }
   })
 })

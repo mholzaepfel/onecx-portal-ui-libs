@@ -7,5 +7,8 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/libs/integration-tests',
-  testTimeout: 200000,
+  forceExit: true,
+  maxConcurrency: 8,
+  testTimeout: 300000, // Increased timeout for container operations
+  detectOpenHandles: true, // Help detect resource leaks
 }

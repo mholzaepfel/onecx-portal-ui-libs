@@ -1,0 +1,103 @@
+name: 'Docker Cache'
+description: 'Cache and pull Docker images for integration tests'
+inputs:
+  env-file-path:
+    description: 'Path to the env.ts file containing image definitions'
+    default: 'libs/integration-tests/src/lib/config/env.ts'
+    required: false
+  cache-key-suffix:
+    description: 'Additional suffix for cache key'
+    default: ''
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Create Docker images cache directory
+      run: |
+        mkdir -p /tmp/docker-images
+      shell: bash
+
+    - name: Cache Docker images
+      id: cache-docker-images
+      uses: actions/cache@v4
+      with:
+        path: /tmp/docker-images
+        key: docker-images-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}
+        restore-keys: |
+          docker-images-${{ hashFiles(inputs.env-file-path) }}${{ inputs.cache-key-suffix }}
+
+    - name: Load cached Docker images
+      if: steps.cache-docker-images.outputs.cache-hit == 'true'
+      run: |
+        echo "Loading cached Docker images..."
+        if [ -f /tmp/docker-images/postgres.tar ]; then
+          docker load < /tmp/docker-images/postgres.tar
+        fi
+        if [ -f /tmp/docker-images/keycloak.tar ]; then
+          docker load < /tmp/docker-images/keycloak.tar
+        fi
+        for file in /tmp/docker-images/onecx-*.tar; do
+          if [ -f "$file" ]; then
+            docker load < "$file" || echo "Failed to load $file, continuing..."
+          fi
+        done
+        echo "Cached Docker images loaded"
+        docker images
+      shell: bash
+
+    - name: Pull and cache Docker images
+      if: steps.cache-docker-images.outputs.cache-hit != 'true'
+      run: |
+        echo "Pulling and caching Docker images..."
+
+        # Extract image names from env.ts file
+        ENV_FILE="${{ inputs.env-file-path }}"
+
+        # Extract base images
+        POSTGRES_IMAGE=$(grep "export const POSTGRES" "$ENV_FILE" | sed "s/.*= *['\"]//; s/['\"].*//")
+        KEYCLOAK_IMAGE=$(grep "export const KEYCLOAK" "$ENV_FILE" | sed "s/.*= *['\"]//; s/['\"].*//")
+
+        echo "Base images found:"
+        echo "  POSTGRES: $POSTGRES_IMAGE"
+        echo "  KEYCLOAK: $KEYCLOAK_IMAGE"
+
+        # Pull and save base images that might hit Docker Hub rate limits
+        if [ -n "$POSTGRES_IMAGE" ]; then
+          docker pull "$POSTGRES_IMAGE"
+          docker save "$POSTGRES_IMAGE" -o /tmp/docker-images/postgres.tar
+          echo "Cached $POSTGRES_IMAGE"
+        fi
+
+        if [ -n "$KEYCLOAK_IMAGE" ]; then
+          docker pull "$KEYCLOAK_IMAGE"
+          docker save "$KEYCLOAK_IMAGE" -o /tmp/docker-images/keycloak.tar
+          echo "Cached $KEYCLOAK_IMAGE"
+        fi
+
+        # Extract OneCX images from both objects using grep and sed
+        echo "Extracting OneCX images from env.ts..."
+        ONECX_IMAGES=$(grep -E "(ONECX_.*_SVC|ONECX_SHELL_.*): " "$ENV_FILE" | \
+                      sed "s/.*\`\${DOCKER_REPO}\/\([^:]*:[^']*\)\`.*/ghcr.io\/onecx\/\1/" | \
+                      sed "s/.*['\"]ghcr\.io\/onecx\/\([^'\"]*\)['\"].*/ghcr.io\/onecx\/\1/")
+
+        echo "OneCX images found:"
+        echo "$ONECX_IMAGES"
+
+        # Pull and save OneCX images
+        echo "$ONECX_IMAGES" | while read -r image; do
+          if [ -n "$image" ] && [[ "$image" == ghcr.io/onecx/* ]]; then
+            if docker pull "$image"; then
+              # Extract service name for filename
+              service_name=$(echo "$image" | sed 's/.*onecx-//' | sed 's/:.*$//')
+              docker save "$image" -o "/tmp/docker-images/onecx-${service_name}.tar"
+              echo "Cached $image"
+            else
+              echo "Failed to pull $image, continuing..."
+            fi
+          fi
+        done
+
+        echo "Docker images pulled and cached"
+        docker images
+      shell: bash

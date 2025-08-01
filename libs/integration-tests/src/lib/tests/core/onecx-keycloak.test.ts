@@ -2,18 +2,30 @@ import { Network, StartedNetwork } from 'testcontainers'
 import { OnecxKeycloakContainer, StartedOnecxKeycloakContainer } from '../../containers/core/onecx-keycloak'
 import { OnecxPostgresContainer, StartedOnecxPostgresContainer } from '../../containers/core/onecx-postgres'
 import axios from 'axios'
+import { KEYCLOAK, POSTGRES } from '../../config/env'
 
-const imagePg = 'docker.io/library/postgres:13.4'
-const imageKc = 'quay.io/keycloak/keycloak:23.0.4'
-
-xdescribe('Default Keycloak Testcontainer', () => {
+describe('Default Keycloak Testcontainer', () => {
   let pgContainer: StartedOnecxPostgresContainer
   let kcContainer: StartedOnecxKeycloakContainer
+  let network: StartedNetwork
 
   beforeAll(async () => {
-    const network: StartedNetwork = await new Network().start()
-    pgContainer = await new OnecxPostgresContainer(imagePg).withNetwork(network).start()
-    kcContainer = await new OnecxKeycloakContainer(imageKc, pgContainer).withNetwork(network).start()
+    try {
+      network = await new Network().start()
+      pgContainer = await new OnecxPostgresContainer(POSTGRES).withNetwork(network).start()
+      kcContainer = await new OnecxKeycloakContainer(KEYCLOAK, pgContainer).withNetwork(network).start()
+    } catch (error) {
+      console.error('Failed to start containers:', error)
+      // Cleanup on failure
+      try {
+        if (kcContainer) await kcContainer.stop()
+        if (pgContainer) await pgContainer.stop()
+        if (network) await network.stop()
+      } catch (cleanupError) {
+        console.error('Cleanup failed:', cleanupError)
+      }
+      throw error
+    }
   })
 
   it('should set default environment values', () => {
@@ -56,7 +68,19 @@ xdescribe('Default Keycloak Testcontainer', () => {
   })
 
   afterAll(async () => {
-    await kcContainer.stop()
-    await pgContainer.stop()
+    const stopPromises = []
+
+    try {
+      if (kcContainer) stopPromises.push(kcContainer.stop().catch((e) => console.warn('Failed to stop Keycloak:', e)))
+      if (pgContainer) stopPromises.push(pgContainer.stop().catch((e) => console.warn('Failed to stop Postgres:', e)))
+
+      await Promise.allSettled(stopPromises)
+
+      if (network) {
+        await network.stop().catch((e) => console.warn('Failed to stop network:', e))
+      }
+    } catch (error) {
+      console.warn('Error during cleanup:', error)
+    }
   })
 })

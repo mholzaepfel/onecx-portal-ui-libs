@@ -5,22 +5,37 @@ import { OnecxPostgresContainer, StartedOnecxPostgresContainer } from '../../con
 import { WorkspaceSvcContainer, StartedWorkspaceSvcContainer } from '../../containers/svc/onecx-workspace-svc'
 import axios from 'axios'
 
-xdescribe('Default workspace-svc Testcontainer', () => {
+describe('Default workspace-svc Testcontainer', () => {
   let pgContainer: StartedOnecxPostgresContainer
   let kcContainer: StartedOnecxKeycloakContainer
   let userProfileSvcContainer: StartedWorkspaceSvcContainer
+  let network: StartedNetwork
 
   beforeAll(async () => {
-    const network: StartedNetwork = await new Network().start()
-    pgContainer = await new OnecxPostgresContainer(POSTGRES).withNetwork(network).start()
-    kcContainer = await new OnecxKeycloakContainer(KEYCLOAK, pgContainer).withNetwork(network).start()
-    userProfileSvcContainer = await new WorkspaceSvcContainer(
-      onecxSvcImages.ONECX_USER_PROFILE_SVC,
-      pgContainer,
-      kcContainer
-    )
-      .withNetwork(network)
-      .start()
+    try {
+      network = await new Network().start()
+      pgContainer = await new OnecxPostgresContainer(POSTGRES).withNetwork(network).start()
+      kcContainer = await new OnecxKeycloakContainer(KEYCLOAK, pgContainer).withNetwork(network).start()
+      userProfileSvcContainer = await new WorkspaceSvcContainer(
+        onecxSvcImages.ONECX_USER_PROFILE_SVC,
+        pgContainer,
+        kcContainer
+      )
+        .withNetwork(network)
+        .start()
+    } catch (error) {
+      console.error('Failed to start containers:', error)
+      // Cleanup on failure
+      try {
+        if (userProfileSvcContainer) await userProfileSvcContainer.stop()
+        if (kcContainer) await kcContainer.stop()
+        if (pgContainer) await pgContainer.stop()
+        if (network) await network.stop()
+      } catch (cleanupError) {
+        console.error('Cleanup failed:', cleanupError)
+      }
+      throw error
+    }
   })
 
   it('database should be created', async () => {
@@ -41,8 +56,23 @@ xdescribe('Default workspace-svc Testcontainer', () => {
   })
 
   afterAll(async () => {
-    await userProfileSvcContainer.stop()
-    await kcContainer.stop()
-    await pgContainer.stop()
+    const stopPromises = []
+
+    try {
+      if (userProfileSvcContainer)
+        stopPromises.push(
+          userProfileSvcContainer.stop().catch((e) => console.warn('Failed to stop user profile service:', e))
+        )
+      if (kcContainer) stopPromises.push(kcContainer.stop().catch((e) => console.warn('Failed to stop Keycloak:', e)))
+      if (pgContainer) stopPromises.push(pgContainer.stop().catch((e) => console.warn('Failed to stop Postgres:', e)))
+
+      await Promise.allSettled(stopPromises)
+
+      if (network) {
+        await network.stop().catch((e) => console.warn('Failed to stop network:', e))
+      }
+    } catch (error) {
+      console.warn('Error during cleanup:', error)
+    }
   })
 })

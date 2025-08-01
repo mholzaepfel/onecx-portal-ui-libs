@@ -5,22 +5,37 @@ import { OnecxPostgresContainer, StartedOnecxPostgresContainer } from '../../con
 import { ProductStoreSvcContainer, StartedProductStoreSvcContainer } from '../../containers/svc/onecx-product-store-svc'
 import axios from 'axios'
 
-xdescribe('Default workspace-svc Testcontainer', () => {
+describe('Default workspace-svc Testcontainer', () => {
   let pgContainer: StartedOnecxPostgresContainer
   let kcContainer: StartedOnecxKeycloakContainer
   let productStoreSvcContainer: StartedProductStoreSvcContainer
+  let network: StartedNetwork
 
   beforeAll(async () => {
-    const network: StartedNetwork = await new Network().start()
-    pgContainer = await new OnecxPostgresContainer(POSTGRES).withNetwork(network).start()
-    kcContainer = await new OnecxKeycloakContainer(KEYCLOAK, pgContainer).withNetwork(network).start()
-    productStoreSvcContainer = await new ProductStoreSvcContainer(
-      onecxSvcImages.ONECX_PRODUCT_STORE_SVC,
-      pgContainer,
-      kcContainer
-    )
-      .withNetwork(network)
-      .start()
+    try {
+      network = await new Network().start()
+      pgContainer = await new OnecxPostgresContainer(POSTGRES).withNetwork(network).start()
+      kcContainer = await new OnecxKeycloakContainer(KEYCLOAK, pgContainer).withNetwork(network).start()
+      productStoreSvcContainer = await new ProductStoreSvcContainer(
+        onecxSvcImages.ONECX_PRODUCT_STORE_SVC,
+        pgContainer,
+        kcContainer
+      )
+        .withNetwork(network)
+        .start()
+    } catch (error) {
+      console.error('Failed to start containers:', error)
+      // Cleanup on failure
+      try {
+        if (productStoreSvcContainer) await productStoreSvcContainer.stop()
+        if (kcContainer) await kcContainer.stop()
+        if (pgContainer) await pgContainer.stop()
+        if (network) await network.stop()
+      } catch (cleanupError) {
+        console.error('Cleanup failed:', cleanupError)
+      }
+      throw error
+    }
   })
 
   it('database should be created', async () => {
@@ -41,8 +56,23 @@ xdescribe('Default workspace-svc Testcontainer', () => {
   })
 
   afterAll(async () => {
-    await productStoreSvcContainer.stop()
-    await kcContainer.stop()
-    await pgContainer.stop()
+    const stopPromises = []
+
+    try {
+      if (productStoreSvcContainer)
+        stopPromises.push(
+          productStoreSvcContainer.stop().catch((e) => console.warn('Failed to stop product store service:', e))
+        )
+      if (kcContainer) stopPromises.push(kcContainer.stop().catch((e) => console.warn('Failed to stop Keycloak:', e)))
+      if (pgContainer) stopPromises.push(pgContainer.stop().catch((e) => console.warn('Failed to stop Postgres:', e)))
+
+      await Promise.allSettled(stopPromises)
+
+      if (network) {
+        await network.stop().catch((e) => console.warn('Failed to stop network:', e))
+      }
+    } catch (error) {
+      console.warn('Error during cleanup:', error)
+    }
   })
 })
