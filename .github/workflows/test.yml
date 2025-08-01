@@ -38,7 +38,7 @@ jobs:
         with:
           name: coverage-reports
           path: |
-            package.json      
+            package.json 
             reports/
           retention-days: 1
           if-no-files-found: ignore
