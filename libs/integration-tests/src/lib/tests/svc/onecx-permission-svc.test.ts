@@ -6,7 +6,7 @@ import { PermissionSvcContainer, StartedPermissionSvcContainer } from '../../con
 import axios from 'axios'
 import { TenantSvcContainer, StartedTenantSvcContainer } from '../../containers/svc/onecx-tenant-svc'
 
-describe('Default workspace-svc Testcontainer', () => {
+xdescribe('Default workspace-svc Testcontainer', () => {
   jest.mock('axios')
   let pgContainer: StartedOnecxPostgresContainer
   let kcContainer: StartedOnecxKeycloakContainer

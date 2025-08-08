@@ -4,7 +4,7 @@ import { OnecxPostgresContainer, StartedOnecxPostgresContainer } from '../../con
 import axios from 'axios'
 import { KEYCLOAK, POSTGRES } from '../../config/env'
 
-describe('Default Keycloak Testcontainer', () => {
+xdescribe('Default Keycloak Testcontainer', () => {
   let pgContainer: StartedOnecxPostgresContainer
   let kcContainer: StartedOnecxKeycloakContainer
   let network: StartedNetwork

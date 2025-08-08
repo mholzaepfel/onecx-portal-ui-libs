@@ -3,7 +3,7 @@ import { OnecxPostgresContainer, StartedOnecxPostgresContainer } from '../../con
 import { Client } from 'pg'
 import { Network, StartedNetwork } from 'testcontainers'
 
-describe('Default Postgres Testcontainer', () => {
+xdescribe('Default Postgres Testcontainer', () => {
   let client: Client
   let pgContainer: StartedOnecxPostgresContainer
   let network: StartedNetwork

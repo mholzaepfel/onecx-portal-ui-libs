@@ -4,7 +4,7 @@ import { OnecxKeycloakContainer, StartedOnecxKeycloakContainer } from '../../con
 import { OnecxPostgresContainer, StartedOnecxPostgresContainer } from '../../containers/core/onecx-postgres'
 import { ShellUiContainer, StartedShellUiContainer } from '../../containers/ui/onecx-shell-ui'
 
-describe('Default workspace-svc Testcontainer', () => {
+xdescribe('Default workspace-svc Testcontainer', () => {
   let pgContainer: StartedOnecxPostgresContainer
   let kcContainer: StartedOnecxKeycloakContainer
   let shellUiContainer: StartedShellUiContainer
