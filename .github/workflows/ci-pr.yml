@@ -2,11 +2,6 @@ name: On PR
 
 on:
   pull_request:
-    branches:
-      - main
-      - develop
-      - v3
-      - v5
 
 jobs:
   dependency-review:
