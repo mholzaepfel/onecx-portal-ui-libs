@@ -1,0 +1,131 @@
+name: 'SonarQube PR Analysis'
+description: 'Composite action for SonarQube analysis on pull requests'
+inputs:
+  workflow_run_id:
+    description: 'The workflow run ID to download artifacts from'
+    required: true
+  repository_full_name:
+    description: 'Full repository name (owner/repo)'
+    required: true
+  head_repository_full_name:
+    description: 'Head repository full name for forks'
+    required: true
+  head_branch:
+    description: 'Head branch name'
+    required: true
+  head_sha:
+    description: 'Head commit SHA'
+    required: true
+  event_type:
+    description: 'Event type (pull_request)'
+    required: true
+  conclusion:
+    description: 'Workflow conclusion (success/failure)'
+    required: true
+  github_token:
+    description: 'GitHub token'
+    required: true
+  sonar_token:
+    description: 'SonarCloud token'
+    required: true
+  library_path:
+    description: 'Library path to analyze (e.g., angular-webcomponents)'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Download PR metadata
+      uses: dawidd6/action-download-artifact@v11
+      with:
+        run_id: ${{ inputs.workflow_run_id }}
+        name: github-action-pr
+      continue-on-error: true
+
+    - name: Read PR number
+      id: pr_number
+      uses: juliangruber/read-file-action@v1
+      with:
+        path: ./github-action-pr.txt
+
+    - name: Get PR data
+      id: get_pr_data
+      uses: octokit/request-action@v2.x
+      with:
+        route: GET /repos/${{ inputs.repository_full_name }}/pulls/${{ steps.pr_number.outputs.content }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+
+    - name: Checkout head branch
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.head_repository_full_name }}
+        ref: ${{ inputs.head_branch }}
+        fetch-depth: 0
+
+    - name: Checkout base branch
+      shell: bash
+      env:
+        BRANCH_NAME: ${{ inputs.head_branch }}
+      run: |
+        git remote add upstream https://github.com/${{ inputs.repository_full_name }}.git
+        git fetch upstream
+        git checkout -B ${{ fromJson(steps.get_pr_data.outputs.data).base.ref }} upstream/${{ fromJson(steps.get_pr_data.outputs.data).base.ref }}
+        git checkout "$BRANCH_NAME"
+        git clean -ffdx && git reset --hard HEAD
+
+    - name: Download coverage reports
+      uses: dawidd6/action-download-artifact@v11
+      with:
+        run_id: ${{ inputs.workflow_run_id }}
+        name: coverage-reports
+      continue-on-error: true
+
+    - name: Check if coverage report exists
+      id: check_coverage
+      shell: bash
+      run: |
+        lcov_path="reports/${{ inputs.library_path }}/coverage/lcov.info"
+        if [ -f "$lcov_path" ]; then
+          echo "coverage_exists=true" >> $GITHUB_OUTPUT
+          echo "Coverage report found at $lcov_path"
+        else
+          echo "coverage_exists=false" >> $GITHUB_OUTPUT
+          echo "No coverage report found at $lcov_path"
+        fi
+
+    - name: Normalize lcov.info for SonarCloud
+      if: steps.check_coverage.outputs.coverage_exists == 'true'
+      shell: bash
+      run: |
+        lcov_path="reports/${{ inputs.library_path }}/coverage/lcov.info"
+        echo "Normalizing $lcov_path"
+        sed -i 's|^SF:|SF:/|' "$lcov_path"
+
+    - name: Run SonarCloud Scan
+      uses: SonarSource/sonarqube-scan-action@v6
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        SONAR_TOKEN: ${{ inputs.sonar_token }}
+      with:
+        projectBaseDir: libs/${{ inputs.library_path }}/
+        args: >
+          -Dsonar.projectKey=${{ github.repository_owner }}_${{ github.event.repository.name }}_${{ inputs.library_path }}
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.organization=${{ github.repository_owner }}
+          -Dsonar.scm.disabled=true
+          -Dsonar.sourceEncoding=UTF-8
+          -Dsonar.javascript.coveragePlugin=lcov
+          -Dsonar.javascript.lcov.reportPaths=${{ github.workspace }}/reports/${{ inputs.library_path }}/coverage/lcov.info
+          -Dsonar.testExecutionReportPaths=${{ github.workspace }}/reports/${{ inputs.library_path }}/sonarqube_report.xml
+          -Dsonar.working.directory=${{ github.workspace }}/reports/${{ inputs.library_path }}/.scannerwork
+          "-Dsonar.exclusions=src/assets/**/*,src/migrations/**/*,src/mocks/**/*"
+          "-Dsonar.cpd.exclusions=src/**/*.ts,src/**/*.html"
+          "-Dsonar.coverage.exclusions=*.ts,*.js,src/*.ts,**/*.spec.ts,**/*.test.ts,**/*.stories.ts,**/*.harness.ts,**/environments/**,**/assets/**,**/generated/**,**/*.module.ts,**/*.main.ts"
+          "-Dsonar.test.inclusions=src/**/*.spec.ts,src/**/*.test.ts"
+          -Dsonar.scm.revision=${{ inputs.head_sha }}
+          -Dsonar.pullrequest.key=${{ fromJson(steps.get_pr_data.outputs.data).number }}
+          -Dsonar.pullrequest.branch=${{ fromJson(steps.get_pr_data.outputs.data).head.ref }}
+          -Dsonar.pullrequest.base=${{ fromJson(steps.get_pr_data.outputs.data).base.ref }}
+          -Dsonar.pullrequest.provider=GitHub
+          -Dsonar.pullrequest.github.repository=${{ inputs.repository_full_name }}

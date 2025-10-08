@@ -1,3 +1,37 @@
+## [6.8.1](https://github.com/onecx/onecx-portal-ui-libs/compare/v6.8.0...v6.8.1) (2025-09-23)
+
+### Bug Fixes
+
+* add original css to created style tags ([#946](https://github.com/onecx/onecx-portal-ui-libs/issues/946)) ([5388958](https://github.com/onecx/onecx-portal-ui-libs/commit/53889586260a1f8c8cc45dc1451e1264228ff84e))
+* **ci:** temporarily disable dependabot auto merge ([#953](https://github.com/onecx/onecx-portal-ui-libs/issues/953)) ([5da891b](https://github.com/onecx/onecx-portal-ui-libs/commit/5da891b38439095cae692d1f6a522fc12c587cc7))
+* fix import-meta link in error message ([#952](https://github.com/onecx/onecx-portal-ui-libs/issues/952)) ([cf7d60d](https://github.com/onecx/onecx-portal-ui-libs/commit/cf7d60d0ac8a2ec586af02e1eea2bc0b9fa4c2cb))
+
+### Chores
+
+* **deps-dev:** bump @semantic-release/release-notes-generator ([#937](https://github.com/onecx/onecx-portal-ui-libs/issues/937)) ([ea454e3](https://github.com/onecx/onecx-portal-ui-libs/commit/ea454e3e7971871365c0e794eda13863605a03ac))
+* **deps-dev:** bump @swc/core from 1.12.14 to 1.13.5 ([#941](https://github.com/onecx/onecx-portal-ui-libs/issues/941)) ([8a4877c](https://github.com/onecx/onecx-portal-ui-libs/commit/8a4877c96fd7457036595b2ec5ec2ef172476473))
+
+## [6.8.0](https://github.com/onecx/onecx-portal-ui-libs/compare/v6.7.0...v6.8.0) (2025-09-10)
+
+### Features
+
+* dependabot should ignore major versions, should also check v5 branch ([#900](https://github.com/onecx/onecx-portal-ui-libs/issues/900)) ([5f368eb](https://github.com/onecx/onecx-portal-ui-libs/commit/5f368ebc7af3dbec521aec90259b5fb289a76df4))
+
+### Bug Fixes
+
+* parse scss file ([#906](https://github.com/onecx/onecx-portal-ui-libs/issues/906)) ([c2dbb09](https://github.com/onecx/onecx-portal-ui-libs/commit/c2dbb09692205dc9fefd5013957d85dcde79e2ef))
+* permission handling v6 ([#924](https://github.com/onecx/onecx-portal-ui-libs/issues/924)) ([e03184a](https://github.com/onecx/onecx-portal-ui-libs/commit/e03184a0aaa5fb7ea0e8b4deda13f868ece40240))
+* permissions in storybooks ([#925](https://github.com/onecx/onecx-portal-ui-libs/issues/925)) ([dd1ff37](https://github.com/onecx/onecx-portal-ui-libs/commit/dd1ff3782d1c57f8e062725103878fd4bee78f1d))
+* select all col no results row wrong colspan ([#920](https://github.com/onecx/onecx-portal-ui-libs/issues/920)) ([fa7cb44](https://github.com/onecx/onecx-portal-ui-libs/commit/fa7cb4492e06029e03a46379640de917458b46dd))
+* sonar settings, as well as sonar coverage reports ([#903](https://github.com/onecx/onecx-portal-ui-libs/issues/903)) ([b0525d2](https://github.com/onecx/onecx-portal-ui-libs/commit/b0525d24e216d9a880a48c4f7ba7fd300e7434ae))
+
+### Chores
+
+* **deps-dev:** bump @types/node from 24.0.14 to 24.3.1 ([#910](https://github.com/onecx/onecx-portal-ui-libs/issues/910)) ([94da13a](https://github.com/onecx/onecx-portal-ui-libs/commit/94da13a756043f955a1715b8d5d4101146474af0))
+* **deps-dev:** bump @typescript-eslint/eslint-plugin ([#915](https://github.com/onecx/onecx-portal-ui-libs/issues/915)) ([31b85ff](https://github.com/onecx/onecx-portal-ui-libs/commit/31b85ff6524a4cd7a9ba3506194f5bdc15ea2186))
+* **deps-dev:** bump msw from 2.10.2 to 2.11.1 ([#909](https://github.com/onecx/onecx-portal-ui-libs/issues/909)) ([814dda7](https://github.com/onecx/onecx-portal-ui-libs/commit/814dda749c214348222d693c91e55ca5baaddd6e))
+* **deps-dev:** bump ts-jest from 29.4.0 to 29.4.1 ([#917](https://github.com/onecx/onecx-portal-ui-libs/issues/917)) ([e68b0a8](https://github.com/onecx/onecx-portal-ui-libs/commit/e68b0a8bf6203b17ed6d064026031940d8c26122))
+
 ## [6.7.0](https://github.com/onecx/onecx-portal-ui-libs/compare/v6.6.0...v6.7.0) (2025-08-28)
 
 ### Features
