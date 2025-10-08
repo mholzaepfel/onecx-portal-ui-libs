@@ -13,6 +13,9 @@ jobs:
       matrix: ${{ steps.matrix-generator.outputs.matrix }}
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Generate coverage reports matrix
         id: matrix-generator
         uses: ./.github/actions/coverage-matrix-generator
@@ -39,6 +42,9 @@ jobs:
         path: ${{ fromJson(needs.set-matrix-pr.outputs.matrix) }}
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Run SonarQube PR Analysis
         uses: ./.github/actions/sonar-pr-analysis
         with:
