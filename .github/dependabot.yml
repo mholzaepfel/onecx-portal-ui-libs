@@ -4,7 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: daily
-    target-branch: "main"
     labels:
       - dependencies
     groups:
@@ -18,25 +17,3 @@ updates:
     ignore:
       - dependency-name: "nx*"
       - dependency-name: "@nx*"
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-  - package-ecosystem: npm
-    directory: "/"
-    schedule:
-      interval: daily
-    target-branch: "v5"
-    labels:
-      - dependencies
-    groups:
-      angular:
-        applies-to: version-updates
-        patterns:
-        - "@angular*"
-        update-types:
-        - "minor"
-        - "patch"
-    ignore:
-      - dependency-name: "nx*"
-      - dependency-name: "@nx*"
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]

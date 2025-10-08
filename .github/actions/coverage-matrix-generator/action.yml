@@ -1,0 +1,51 @@
+name: 'Coverage Reports Matrix Generator'
+description: 'Generates a matrix of libraries that have coverage reports for SonarQube analysis'
+inputs:
+  workflow_run_id:
+    description: 'The workflow run ID to download coverage reports from'
+    required: true
+
+outputs:
+  matrix:
+    description: 'JSON array of library paths that have coverage reports'
+    value: ${{ steps.set-matrix.outputs.matrix }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Download coverage reports
+      uses: dawidd6/action-download-artifact@v11
+      with:
+        run_id: ${{ inputs.workflow_run_id }}
+        name: coverage-reports
+      continue-on-error: true
+
+    - name: Generate coverage reports matrix
+      id: set-matrix
+      shell: bash
+      run: |
+        # Check if reports directory exists
+        if [ ! -d "reports" ]; then
+          echo "::notice::No reports directory found. No libraries will be analyzed."
+          echo "matrix=[]" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        # Find all coverage report directories
+        paths=$(find reports -maxdepth 1 -mindepth 1 -type d -exec basename {} \; 2>/dev/null || true)
+
+        if [ -z "$paths" ]; then
+          echo "::notice::No coverage report directories found. Setting empty matrix."
+          echo "matrix=[]" >> $GITHUB_OUTPUT
+        else
+          # Convert paths to JSON array
+          coverage_reports=$(printf '%s\n' $paths | jq -R . | jq -s -c)
+          echo "::notice::Found coverage reports for libraries: $coverage_reports"
+          echo "matrix=$coverage_reports" >> $GITHUB_OUTPUT
+        fi
+
+        # Log the final matrix for debugging
+        echo "::debug::Generated matrix: $(cat $GITHUB_OUTPUT | grep matrix=)"
