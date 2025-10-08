@@ -13,7 +13,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Environment
-        uses: ./.github/actions/setup-environment
+        uses: mholzaepfel/onecx-portal-ui-libs/.github/actions/setup-environment@main
 
       - name: Run affected Tests
         run: |
